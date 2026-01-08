@@ -1,0 +1,22 @@
+authors:
+  turhancan:
+    name: Turhan Can Kargin
+    description: PhD Candidate at Jagiellonian University
+    avatar: https://github.com/turhancan97.png
+  wojciech:
+    name: Wojciech Jasiński
+    description: Researcher at Jagiellonian University & AGH
+    avatar: https://ui-avatars.com/api/?name=Wojciech+Jasinski&background=7c4dff&color=fff
+  adam:
+    name: Adam Pardyl
+    description: Researcher at Jagiellonian University & IDEAS NCBR
+    avatar: https://ui-avatars.com/api/?name=Adam+Pardyl&background=536dfe&color=fff
+  bartosz:
+    name: Bartosz Zieliński
+    description: Professor at Jagiellonian University
+    avatar: https://ui-avatars.com/api/?name=Bartosz+Zielinski&background=7c4dff&color=fff
+  marcin:
+    name: Marcin Przewięźlikowski
+    description: Researcher at Jagiellonian University
+    avatar: https://ui-avatars.com/api/?name=Marcin+Przewiezlikowski&background=536dfe&color=fff
+

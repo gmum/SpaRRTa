@@ -1,0 +1,17 @@
+# MkDocs and Material Theme
+mkdocs>=1.6.0
+mkdocs-material>=9.5.0
+
+# Plugins
+mkdocs-glightbox>=0.4.0
+mkdocs-minify-plugin>=0.8.0
+
+# Markdown Extensions
+pymdown-extensions>=10.7
+
+# For API documentation (optional, enable when code is added)
+# mkdocstrings[python]>=0.24.0
+
+# Development
+watchdog>=4.0.0
+

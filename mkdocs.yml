@@ -1,0 +1,153 @@
+site_name: SpaRRTa
+site_description: A Synthetic Benchmark for Evaluating Spatial Intelligence in Visual Foundation Models
+site_author: Turhan Can Kargin et al.
+site_url: https://turhancankargin.me/SpaRRTa/
+repo_name: gmum/SpaRRTa
+repo_url: https://github.com/gmum/SpaRRTa
+edit_uri: edit/main/docs/
+
+copyright: Copyright &copy; 2026 SpaRRTa Authors
+
+theme:
+  name: material
+  custom_dir: docs/overrides
+  favicon: imgs/favicon.png
+  logo: imgs/favicon.png
+  
+  palette:
+    # Dark mode (default)
+    - scheme: slate
+      primary: deep purple
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    # Light mode
+    - scheme: default
+      primary: deep purple
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+  font:
+    text: Inter
+    code: JetBrains Mono
+
+  features:
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - navigation.footer
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - announce.dismiss
+
+  icon:
+    repo: fontawesome/brands/github
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/gmum/SpaRRTa
+    - icon: fontawesome/solid/paper-plane
+      link: mailto:turhancan.kargin@doctoral.uj.edu.pl
+  
+  analytics:
+    provider: google
+    property: G-XXXXXXXXXX
+
+  generator: false
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/extra.js
+
+plugins:
+  - search:
+      separator: '[\s\-,:!=\[\]()"/]+|(?!\b)(?=[A-Z][a-z])|\.(?!\d)|&[lg]t;'
+  - glightbox:
+      touchNavigation: true
+      loop: false
+      effect: zoom
+      slide_effect: slide
+      width: 100%
+      height: auto
+      zoomable: true
+      draggable: true
+  - blog:
+      blog_dir: blog
+      blog_toc: true
+      post_date_format: long
+      post_url_format: "{slug}"
+      post_excerpt: required
+      post_excerpt_max_authors: 2
+      archive_toc: true
+      categories_toc: true
+      authors_file: blog/.authors.yml
+  - tags
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+nav:
+  - Home: index.md
+  - Unreal Scene Generation: unreal-scene-generation.md
+  - Evaluation of VFMs: evaluation-vfms.md
+  - Getting Started: getting-started.md
+  - User Guide: user-guide.md
+  - More Results: results.md
+  - Examples: examples.md
+  - Blog:
+    - blog/index.md
+
