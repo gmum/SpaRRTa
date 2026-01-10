@@ -103,12 +103,18 @@ We evaluate a diverse suite of VFMs spanning different learning paradigms:
 
 We evaluate frozen VFM representations using lightweight probing heads:
 
-<figure markdown>
-  ![Probing Methods](imgs/probing/fig_linear.png){ width="32%" }
-  ![Probing Methods](imgs/probing/fig_abmilp.png){ width="32%" }
-  ![Probing Methods](imgs/probing/fig_efficient.png){ width="32%" }
-  <figcaption>Three probing strategies: Linear Probing with GAP, AbMILP, and Efficient Probing.</figcaption>
-</figure>
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1.5rem 0;">
+  <div style="background: var(--sparrta-card-bg); border-radius: 1rem; overflow: hidden;">
+    <img src="../imgs/probing/fig_linear.png" alt="Linear Probing" style="width: 100%; height: 100%;">
+  </div>
+  <div style="background: var(--sparrta-card-bg); border-radius: 1rem; overflow: hidden;">
+    <img src="../imgs/probing/fig_abmilp.png" alt="AbMILP" style="width: 100%; height: 100%;">
+  </div>
+  <div style="background: var(--sparrta-card-bg); border-radius: 1rem; overflow: hidden;">
+    <img src="../imgs/probing/fig_efficient.png" alt="Efficient Probing" style="width: 100%; height: 100%;">
+  </div>
+</div>
+<p style="text-align: center; color: var(--sparrta-text-secondary); margin-top: 0.5rem;">Three probing strategies: Linear Probing with GAP, AbMILP, and Efficient Probing.</p>
 
 ### Probing Strategies
 
