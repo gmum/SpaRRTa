@@ -15,11 +15,15 @@ The core task is to determine the **relative spatial relation** between two obje
 - **Target Object**: The object whose position is being queried
 - **Viewpoint**: The perspective from which the relation is evaluated
 
-<figure markdown>
-  ![Ego vs Allo](imgs/main/ego2.png){ width="48%" }
-  ![Ego vs Allo](imgs/main/allo2.png){ width="48%" }
-  <figcaption><strong>Left:</strong> Egocentric task (camera viewpoint). <strong>Right:</strong> Allocentric task (human viewpoint).</figcaption>
-</figure>
+<div class="comparison-container">
+  <div class="comparison-panel" style="padding: 0;">
+    <img src="../imgs/main/ego2.png" alt="Egocentric task" style="width: 100%; height: 100%; border-radius: 1.0rem;">
+  </div>
+  <div class="comparison-panel" style="padding: 0;">
+    <img src="../imgs/main/allo2.png" alt="Allocentric task" style="width: 100%; height: 100%; border-radius: 1.0rem;">
+  </div>
+</div>
+<p style="text-align: center; color: var(--sparrta-text-secondary); margin-top: 0.5rem;"><strong>Left:</strong> Egocentric task (camera viewpoint). <strong>Right:</strong> Allocentric task (human viewpoint).</p>
 
 ### Task Variants
 
