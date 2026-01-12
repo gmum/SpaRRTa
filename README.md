@@ -1,6 +1,6 @@
 <div align="center">
 
-# <img src="docs/imgs/logo.png" alt="Logo" width="45"/> <span style="color: #F9535B;">SpaRRTa</span>: A Synthetic Benchmark for Evaluating Spatial Intelligence in Visual Foundation Models
+# <img src="docs/imgs/logo.png" alt="Logo" width="55"/> <span style="color: #FF7096;">SpaRRTa</span>: A Synthetic Benchmark for Evaluating Spatial Intelligence in Visual Foundation Models
 
 
 [![python](https://img.shields.io/badge/-Python_3.9_%7C_3.10_%7C_3.11-blue?logo=python&logoColor=white)](https://github.com/pre-commit/pre-commit)
