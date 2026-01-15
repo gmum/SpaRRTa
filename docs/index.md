@@ -8,7 +8,10 @@ hide:
 
 <div class="hero-section">
   <div class="hero-content">
-    <h1 class="hero-title">SpaRRTa</h1>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 1.5rem; margin-bottom: 0.5rem;">
+      <img src="imgs/logo.png" alt="SpaRRTa Logo" style="height: 100px; width: auto;">
+      <h1 class="hero-title" style="margin: 0;">SpaRRTa</h1>
+    </div>
     <p class="hero-subtitle">
       <strong>Spa</strong>tial <strong>R</strong>elation <strong>R</strong>ecognition <strong>Ta</strong>sk<br>
       A Synthetic Benchmark for Evaluating Spatial Intelligence in Visual Foundation Models
