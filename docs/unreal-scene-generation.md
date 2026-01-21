@@ -191,7 +191,7 @@ A key challenge in spatial classification is defining precise boundaries between
 
 <figure markdown>
   ![Scene Examples](imgs/scene_examples/2d_scene_winter.png){ width="60%" }
-  <figcaption>Visualization of valid placement zones (green) and ambiguity exclusion zones (red/gray).</figcaption>
+  <figcaption>Visualization of valid placement zones and ambiguity exclusion zones (red/gray).</figcaption>
 </figure>
 
 ### Exclusion Zones
@@ -254,14 +254,14 @@ def place_objects(environment, objects):
 
 ## Dataset Statistics
 
-| Environment | Ego Images | Allo Images | Total |
-|-------------|------------|-------------|-------|
-| Forest | 5,000 | 10,000 | 15,000 |
-| Desert | 5,000 | 10,000 | 15,000 |
-| Winter Town | 5,000 | 10,000 | 15,000 |
-| Bridge | 5,000 | 10,000 | 15,000 |
-| City | 5,000 | 10,000 | 15,000 |
-| **Total** | **25,000** | **50,000** | **75,000** |
+| Environment | Ego Images | Allo Images |
+|-------------|------------|-------------|
+| Forest | 5,000 | 10,000 |
+| Desert | 5,000 | 10,000 |
+| Winter Town | 5,000 | 10,000 |
+| Bridge | 5,000 | 10,000 |
+| City | 5,000 | 10,000 
+| **Total** | **25,000** | **50,000** |
 
 !!! note "Dataset Size Rationale"
     

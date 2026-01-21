@@ -135,14 +135,28 @@ To address this question, we introduce the **Spatial Relation Recognition Task (
     </div>
   </div>
   <div class="env-card">
-    <img src="imgs/scene_examples/bridge_image.jpg" alt="Bridge">
+    <img src="imgs/scene_examples/city_image.jpg" alt="City">
     <div class="env-card-overlay">
-      <div class="env-card-title">🌉 Bridge</div>
+      <div class="env-card-title">🏙️ City</div>
+    </div>
+  </div>
+</div>
+<div class="env-gallery">
+  <div class="env-card">
+    <img src="imgs/scene_examples/forest_image.jpg" alt="Forest">
+    <div class="env-card-overlay">
+      <div class="env-card-title">🌲 Forest</div>
+    </div>
+  </div>
+  <div class="env-card">
+    <img src="imgs/scene_examples/desert_image.jpg" alt="Desert">
+    <div class="env-card-overlay">
+      <div class="env-card-title">🏜️ Desert</div>
     </div>
   </div>
 </div>
 
-[View All Environments →](unreal-scene-generation.md){ .md-button }
+</div>[View All Environments →](unreal-scene-generation.md){ .md-button }
 
 ## Evaluation Pipeline
 
