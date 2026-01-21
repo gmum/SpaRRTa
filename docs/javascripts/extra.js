@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initCitationCopy();
   initScrollAnimations();
   initImageZoom();
+  initSceneVizSlider();
 });
 
 /**
@@ -193,6 +194,165 @@ document.addEventListener('DOMContentLoaded', function() {
     lazyImages.forEach(img => imageObserver.observe(img));
   }
 });
+
+/**
+ * Scene Visualization Slider
+ */
+function initSceneVizSlider() {
+  const container = document.querySelector('.scene-viz-container');
+  if (!container) return;
+  
+  const totalImages = 60;
+  let currentIndex = 0;
+  let isDragging = false;
+  
+  const imageEl = document.getElementById('scene-viz-image');
+  const thumbEl = document.getElementById('scene-viz-thumb');
+  const fillEl = container.querySelector('.scene-viz-fill');
+  const trackEl = container.querySelector('.scene-viz-track');
+  const prevBtn = container.querySelector('.scene-viz-btn-prev');
+  const nextBtn = container.querySelector('.scene-viz-btn-next');
+  const currentEl = container.querySelector('.scene-viz-current');
+  
+  // Format image number with leading zeros
+  function formatImageNumber(num) {
+    return String(num).padStart(4, '0');
+  }
+  
+  // Get base path from initial image src attribute
+  const initialSrc = imageEl.getAttribute('src') || '';
+  const basePath = initialSrc.replace(/sparrta_environment_viz_\d+\.png$/, '');
+  
+  // Update image
+  function updateImage(index) {
+    currentIndex = Math.max(0, Math.min(index, totalImages - 1));
+    const imageNum = formatImageNumber(currentIndex);
+    imageEl.src = `${basePath}sparrta_environment_viz_${imageNum}.png`;
+    imageEl.alt = `Scene Visualization ${currentIndex + 1}`;
+    
+    // Update counter
+    currentEl.textContent = currentIndex + 1;
+    
+    // Update slider position
+    const percentage = (currentIndex / (totalImages - 1)) * 100;
+    thumbEl.style.left = `${percentage}%`;
+    fillEl.style.width = `${percentage}%`;
+    
+    // Update button states
+    prevBtn.disabled = currentIndex === 0;
+    nextBtn.disabled = currentIndex === totalImages - 1;
+  }
+  
+  // Navigate to specific image
+  function goToImage(index) {
+    updateImage(index);
+  }
+  
+  // Previous/Next navigation
+  prevBtn.addEventListener('click', () => {
+    if (currentIndex > 0) {
+      updateImage(currentIndex - 1);
+    }
+  });
+  
+  nextBtn.addEventListener('click', () => {
+    if (currentIndex < totalImages - 1) {
+      updateImage(currentIndex + 1);
+    }
+  });
+  
+  // Slider track click
+  trackEl.addEventListener('click', (e) => {
+    if (isDragging) return;
+    const rect = trackEl.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
+    const index = Math.round((percentage / 100) * (totalImages - 1));
+    updateImage(index);
+  });
+  
+  // Drag functionality
+  function startDrag(e) {
+    isDragging = true;
+    trackEl.style.cursor = 'grabbing';
+    thumbEl.style.cursor = 'grabbing';
+    updateSliderPosition(e);
+    
+    document.addEventListener('mousemove', onDrag);
+    document.addEventListener('mouseup', stopDrag);
+    document.addEventListener('touchmove', onDrag, { passive: false });
+    document.addEventListener('touchend', stopDrag);
+    
+    e.preventDefault();
+  }
+  
+  function onDrag(e) {
+    if (!isDragging) return;
+    updateSliderPosition(e);
+    e.preventDefault();
+  }
+  
+  function stopDrag() {
+    isDragging = false;
+    trackEl.style.cursor = 'pointer';
+    thumbEl.style.cursor = 'grab';
+    
+    document.removeEventListener('mousemove', onDrag);
+    document.removeEventListener('mouseup', stopDrag);
+    document.removeEventListener('touchmove', onDrag);
+    document.removeEventListener('touchend', stopDrag);
+  }
+  
+  function updateSliderPosition(e) {
+    const rect = trackEl.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const x = clientX - rect.left;
+    const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
+    const index = Math.round((percentage / 100) * (totalImages - 1));
+    
+    thumbEl.style.left = `${percentage}%`;
+    fillEl.style.width = `${percentage}%`;
+    
+    if (index !== currentIndex) {
+      updateImage(index);
+    }
+  }
+  
+  // Mouse drag
+  thumbEl.addEventListener('mousedown', startDrag);
+  trackEl.addEventListener('mousedown', (e) => {
+    if (e.target === trackEl || e.target === fillEl) {
+      startDrag(e);
+    }
+  });
+  
+  // Touch drag
+  thumbEl.addEventListener('touchstart', startDrag, { passive: false });
+  trackEl.addEventListener('touchstart', (e) => {
+    if (e.target === trackEl || e.target === fillEl) {
+      startDrag(e);
+    }
+  }, { passive: false });
+  
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (!container.contains(document.activeElement) && 
+        !container.matches(':hover')) {
+      return;
+    }
+    
+    if (e.key === 'ArrowLeft' && currentIndex > 0) {
+      e.preventDefault();
+      updateImage(currentIndex - 1);
+    } else if (e.key === 'ArrowRight' && currentIndex < totalImages - 1) {
+      e.preventDefault();
+      updateImage(currentIndex + 1);
+    }
+  });
+  
+  // Initialize
+  updateImage(0);
+}
 
 /**
  * Console Easter Egg

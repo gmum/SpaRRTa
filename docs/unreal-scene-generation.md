@@ -268,6 +268,45 @@ def place_objects(environment, objects):
     - **Egocentric**: 5,000 images sufficient for generalization
     - **Allocentric**: 10,000 images needed due to increased task complexity (perspective transformation learning)
 
+## Scene Visualizations
+
+Explore interactive visualizations of generated scenes showing photorealistic renderings alongside their 3D spatial annotations and 2D top-down views.
+
+<div class="scene-viz-container">
+  <div class="scene-viz-slider-wrapper">
+    <div class="scene-viz-legend">
+      <img src="../imgs/scene_plots/legend/sparrta_legend.png" alt="SpaRRTa Legend" class="legend-image">
+    </div>
+    
+    <div class="scene-viz-image-container">
+      <img id="scene-viz-image" src="../imgs/scene_plots/sparrta_environment_viz_0000.png" alt="Scene Visualization" class="scene-viz-image">
+    </div>
+    
+    <div class="scene-viz-controls">
+      <button class="scene-viz-btn scene-viz-btn-prev" aria-label="Previous image">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </button>
+      <div class="scene-viz-counter">
+        <span class="scene-viz-current">1</span> / <span class="scene-viz-total">60</span>
+      </div>
+      <button class="scene-viz-btn scene-viz-btn-next" aria-label="Next image">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 18l6-6-6-6"/>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="scene-viz-slider">
+      <div class="scene-viz-track">
+        <div class="scene-viz-fill"></div>
+        <div class="scene-viz-thumb" id="scene-viz-thumb"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 ### Environment-Asset Relations
 
 Each environment contains **3 unique object triples** used for evaluation. The table below shows the complete mapping of environments to their source objects, target objects, and viewpoint configurations:
