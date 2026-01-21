@@ -179,7 +179,7 @@ To address this question, we introduce the **Spatial Relation Recognition Task (
   
   <div class="author-card">
     <div class="author-name">Wojciech Jasiński</div>
-    <div class="author-affiliation">Jagiellonian University, AGH</div>
+    <div class="author-affiliation">Jagiellonian University, AGH University of Krakow</div>
   </div>
   
   <div class="author-card">
@@ -213,17 +213,20 @@ If you find SpaRRTa useful in your research, please cite our paper:
 
 <div class="citation-box">
   <button class="citation-copy-btn">📋 Copy BibTeX</button>
-  <pre><code class="language-bibtex">@article{kargin2025sparrta,
+  <pre><code class="language-bibtex">@misc{kargin2025sparrta,
   title={SpaRRTa: A Synthetic Benchmark for Evaluating Spatial Intelligence in Visual Foundation Models},
-  author={Kargin, Turhan Can and Jasiński, Wojciech and Pardyl, Adam and Zieliński, Bartosz and Przewięźlikowski, Marcin},
-  journal={arXiv preprint arXiv:2601.11729},
-  year={2025}
+  author={Turhan Can Kargin and Wojciech Jasiński and Adam Pardyl and Bartosz Zieliński and Marcin Przewięźlikowski},
+  year={2026},
+  eprint={2601.11729},
+  archivePrefix={arXiv},
+  primaryClass={cs.CV},
+  url={https://arxiv.org/abs/2601.11729}
 }</code></pre>
 </div>
 
 ## Acknowledgments
 
-This work was supported by the Polish National Science Center and conducted at the Faculty of Mathematics and Computer Science, Jagiellonian University.
+This research has been supported by the flagship project entitled “Artificial Intelligence Computing Center Core Facility” from the Priority Research Area DigiWorld under the Strategic Programme Excellence Initiative at the Jagiellonian University. The work of Turhan Can Kargin, Adam Pardyl, and Bartosz Zieliński was supported by National Science Centre (Poland) grant number 2023/50/E/ST6/00469. The research of Marcin Przewięźlikowski was supported by the National Science Centre (Poland), grant no. 2023/49/N/ST6/03268. We gratefully acknowledge Polish high-performance computing infrastructure PLGrid (HPC Center: ACK Cyfronet AGH) for providing computer facilities and support within computational grant no. PLG/2025/018312.
 
 ---
 

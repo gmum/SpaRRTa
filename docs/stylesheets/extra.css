@@ -303,9 +303,9 @@
   flex-wrap: nowrap;
   margin: 2rem auto;
   padding: 2rem 3rem;
-  background: var(--sparrta-card-bg);
+  background: #f1f1f1;
   border-radius: 1rem;
-  max-width: 900px;
+  max-width: 1200px;
 }
 
 .affiliation-logo {
@@ -324,6 +324,31 @@
   transform: scale(1.05);
 }
 
+/* Make uj.png and gmum.png logos 2x bigger */
+.affiliation-logo[src*="uj.png"],
+.affiliation-logo[alt="Jagiellonian University"] {
+  height: 100px;
+  max-width: 250px;
+}
+
+.affiliation-logo[src*="gmum.png"],
+.affiliation-logo[alt="GMUM"] {
+  height: 100px;
+  max-width: 250px;
+}
+
+.affiliation-logo[src*="ideas.png"],
+.affiliation-logo[alt="IDEAS NCBR"] {
+  height: 100px;
+  max-width: 250px;
+}
+
+.affiliation-logo[src*="agh.png"],
+.affiliation-logo[alt="AGH University of Krakow"] {
+  height: 100px;
+  max-width: 250px;
+}
+
 @media (max-width: 900px) {
   .affiliations {
     flex-wrap: wrap;
@@ -331,6 +356,31 @@
   }
   
   .affiliation-logo {
+    height: 80px;
+    max-width: 220px;
+  }
+  
+  /* Make uj.png and gmum.png logos 2x bigger on mobile */
+  .affiliation-logo[src*="uj.png"],
+  .affiliation-logo[alt="Jagiellonian University"] {
+    height: 80px;
+    max-width: 220px;
+  }
+  
+  .affiliation-logo[src*="gmum.png"],
+  .affiliation-logo[alt="GMUM"] {
+    height: 80px;
+    max-width: 220px;
+  }
+  
+  .affiliation-logo[src*="ideas.png"],
+  .affiliation-logo[alt="IDEAS NCBR"] {
+    height: 80px;
+    max-width: 220px;
+  }
+  
+  .affiliation-logo[src*="agh.png"],
+  .affiliation-logo[alt="AGH University of Krakow"] {
     height: 80px;
     max-width: 220px;
   }
@@ -344,6 +394,7 @@
   padding: 1.5rem;
   margin: 2rem 0;
   position: relative;
+  overflow: visible;
 }
 
 .citation-box pre {
@@ -367,6 +418,8 @@
   cursor: pointer;
   font-size: 0.85rem;
   transition: all 0.3s ease;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .citation-copy-btn:hover {
