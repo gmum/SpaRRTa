@@ -9,7 +9,7 @@
 [![hydra](https://img.shields.io/badge/Config-Hydra_1.3-89b8cd)](https://hydra.cc/)
 [![license](https://img.shields.io/badge/License-MIT-green.svg?labelColor=gray)](https://github.com/gmum/SpaRRTa/blob/main/LICENSE)
 
-[**Project Page**](https://sparrta.gmum.net/) | [**Paper**]() | [**arXiv**]() | [**HuggingFace Model**]() | [**Dataset**](https://github.com/HaoyiZhu/RealRobot) | [**Twitter/X**]() | [**YouTube Video**]()
+[**Project Page**](https://sparrta.gmum.net/) | [**Paper**](https://arxiv.org/pdf/2601.11729) | [**arXiv**](https://arxiv.org/abs/2601.11729) | [**HuggingFace Model**]() | [**Dataset**]() | [**Twitter/X**]() | [**YouTube Video**]()
 
 [Turhan Can Kargin](https://turhancankargin.me/), [Wojciech Jasiński](https://www.linkedin.com/in/wojciechjasinski/), [Adam Pardyl](https://adam.pardyl.com/),  [Bartosz Zieliński](https://bartoszzielinski.github.io/), [Marcin Przewięźlikowski](https://mprzewie.github.io/)
 </div>

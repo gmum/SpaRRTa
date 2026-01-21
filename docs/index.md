@@ -24,8 +24,8 @@ hide:
       <a href="https://github.com/gmum/SpaRRTa/blob/main/LICENSE">
         <img src="https://img.shields.io/github/license/gmum/SpaRRTa?style=for-the-badge&labelColor=1a1a2e&color=536dfe" alt="License">
       </a>
-      <a href="https://arxiv.org/abs/XXXX.XXXXX">
-        <img src="https://img.shields.io/badge/arXiv-XXXX.XXXXX-b31b1b?style=for-the-badge&logo=arxiv&logoColor=white&labelColor=1a1a2e" alt="arXiv">
+      <a href="https://arxiv.org/abs/2601.11729">
+        <img src="https://img.shields.io/badge/arXiv-2601.11729-b31b1b?style=for-the-badge&logo=arxiv&logoColor=white&labelColor=1a1a2e" alt="arXiv">
       </a>
       <img src="https://img.shields.io/badge/Unreal_Engine-5.5-0E1128?style=for-the-badge&logo=unrealengine&logoColor=white&labelColor=1a1a2e" alt="UE5">
     </div>
@@ -37,8 +37,11 @@ hide:
       <a href="https://github.com/gmum/SpaRRTa" class="hero-btn hero-btn-secondary" target="_blank">
         <span class="twemoji">📦</span> GitHub
       </a>
-      <a href="https://arxiv.org/abs/XXXX.XXXXX" class="hero-btn hero-btn-secondary" target="_blank">
+      <a href="https://arxiv.org/abs/2601.11729" class="hero-btn hero-btn-secondary" target="_blank">
         <span class="twemoji">📄</span> Paper
+      </a>
+      <a href="#" class="hero-btn hero-btn-secondary" style="opacity: 0.7; cursor: not-allowed;">
+        <span class="twemoji">📊</span> Dataset (coming soon)
       </a>
     </div>
     
@@ -199,7 +202,7 @@ If you find SpaRRTa useful in your research, please cite our paper:
   <pre><code class="language-bibtex">@article{kargin2025sparrta,
   title={SpaRRTa: A Synthetic Benchmark for Evaluating Spatial Intelligence in Visual Foundation Models},
   author={Kargin, Turhan Can and Jasiński, Wojciech and Pardyl, Adam and Zieliński, Bartosz and Przewięźlikowski, Marcin},
-  journal={arXiv preprint arXiv:XXXX.XXXXX},
+  journal={arXiv preprint arXiv:2601.11729},
   year={2025}
 }</code></pre>
 </div>
