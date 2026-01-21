@@ -13,3 +13,8 @@
 
 [Turhan Can Kargin](https://turhancankargin.me/), [Wojciech Jasiński](https://www.linkedin.com/in/wojciechjasinski/), [Adam Pardyl](https://adam.pardyl.com/),  [Bartosz Zieliński](https://bartoszzielinski.github.io/), [Marcin Przewięźlikowski](https://mprzewie.github.io/)
 </div>
+
+:newspaper: **NEWS**:
+
+- *Jan. 2026:* Codebase will be released soon!
+- *Jan. 2026:* Paper is available on [arXiv](https://arxiv.org/abs/2601.11729).
