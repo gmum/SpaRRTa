@@ -443,6 +443,16 @@
   flex-wrap: wrap;
 }
 
+.prediction-demo-button-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.prediction-demo-images.show-prediction ~ .prediction-demo-button-wrapper {
+  display: none;
+}
+
 .prediction-demo-select-group {
   display: flex;
   flex-direction: column;
@@ -510,6 +520,20 @@
   cursor: not-allowed;
 }
 
+.prediction-demo-btn.predicting {
+  animation: button-pulse 1s ease-in-out infinite;
+  cursor: wait;
+}
+
+@keyframes button-pulse {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(124, 77, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(124, 77, 255, 0.6);
+  }
+}
+
 .btn-icon {
   font-size: 1.2rem;
 }
@@ -518,17 +542,29 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 2rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0;
 }
 
 .prediction-demo-images.show-prediction {
   grid-template-columns: 1fr 1fr;
+  margin-bottom: 1.5rem;
+}
+
+/* Make original image smaller initially */
+.prediction-demo-images:not(.show-prediction) .prediction-image-container {
+  max-width: 450px;
+  margin: 0 auto;
 }
 
 .prediction-image-wrapper {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+}
+
+.prediction-prediction-wrapper {
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
 .prediction-image-label {
@@ -546,6 +582,46 @@
   background: rgba(0, 0, 0, 0.3);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
   cursor: crosshair;
+  transition: all 0.3s ease;
+}
+
+.prediction-image-container.predicting {
+  position: relative;
+  animation: prediction-pulse 1s ease-in-out;
+}
+
+.prediction-image-container.predicting::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(124, 77, 255, 0.1), rgba(83, 109, 254, 0.1));
+  border-radius: 0.75rem;
+  pointer-events: none;
+  animation: prediction-shimmer 1s ease-in-out infinite;
+}
+
+@keyframes prediction-pulse {
+  0%, 100% {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 8px 32px rgba(124, 77, 255, 0.4);
+  }
+}
+
+@keyframes prediction-shimmer {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0.3;
+  }
 }
 
 .prediction-image {

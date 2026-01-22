@@ -446,19 +446,57 @@ function initPredictionDemo() {
     
     // Hide prediction when changing settings
     predictionWrapper.style.display = 'none';
+    predictionWrapper.style.opacity = '0';
     imagesContainer.classList.remove('show-prediction');
+    
+    // Reset button state
+    predictBtn.disabled = false;
+    predictBtn.classList.remove('predicting');
+    const btnIcon = predictBtn.querySelector('.btn-icon');
+    if (!btnIcon || btnIcon.textContent !== '🔮') {
+      predictBtn.innerHTML = '<span class="btn-icon">🔮</span> Predict';
+    }
+    originalContainer.classList.remove('predicting');
   }
   
-  // Show prediction
+  // Show prediction with loading state
   function showPrediction() {
     const data = predictionData[currentEnv];
     if (!data) return;
     
-    const predictionFile = currentViewpoint === 'camera' ? data.camera : data.human;
-    predictionImg.src = predictionFile;
+    // Store original button text
+    const originalBtnText = '<span class="btn-icon">🔮</span> Predict';
     
-    predictionWrapper.style.display = 'flex';
-    imagesContainer.classList.add('show-prediction');
+    // Set loading state
+    predictBtn.disabled = true;
+    predictBtn.classList.add('predicting');
+    predictBtn.innerHTML = '<span class="btn-icon">⏳</span> Predicting...';
+    
+    // Add loading animation to original image
+    originalContainer.classList.add('predicting');
+    
+    // Wait 1 second before showing prediction
+    setTimeout(() => {
+      const predictionFile = currentViewpoint === 'camera' ? data.camera : data.human;
+      predictionImg.src = predictionFile;
+      
+      // Fade in prediction
+      predictionWrapper.style.display = 'flex';
+      predictionWrapper.style.opacity = '0';
+      imagesContainer.classList.add('show-prediction');
+      
+      // Fade in animation
+      setTimeout(() => {
+        predictionWrapper.style.transition = 'opacity 0.5s ease';
+        predictionWrapper.style.opacity = '1';
+      }, 10);
+      
+      // Remove loading state
+      predictBtn.disabled = false;
+      predictBtn.classList.remove('predicting');
+      predictBtn.innerHTML = originalBtnText;
+      originalContainer.classList.remove('predicting');
+    }, 1000);
   }
   
   // Tooltip functionality - setup once

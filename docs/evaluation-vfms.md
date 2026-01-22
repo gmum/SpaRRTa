@@ -123,11 +123,6 @@ Explore spatial relation predictions from the **VGGT** model using our interacti
         <option value="human">Human (Allocentric)</option>
       </select>
     </div>
-    
-    <button id="prediction-predict-btn" class="prediction-demo-btn">
-      <span class="btn-icon">🔮</span>
-      Predict
-    </button>
   </div>
   
   <div class="prediction-demo-images" id="prediction-images-container">
@@ -148,10 +143,17 @@ Explore spatial relation predictions from the **VGGT** model using our interacti
     </div>
   </div>
   
+  <div class="prediction-demo-button-wrapper">
+    <button id="prediction-predict-btn" class="prediction-demo-btn">
+      <span class="btn-icon">🔮</span>
+      Predict
+    </button>
+  </div>
+  
   <div class="prediction-demo-info" id="prediction-info">
     <p><strong>Reference Object:</strong> <span id="prediction-reference">Tree</span></p>
     <p><strong>Target Object:</strong> <span id="prediction-target">Car</span></p>
-    <p class="prediction-demo-note">💡 Hover over the images to see object locations</p>
+    <p class="prediction-demo-note">💡 Hover over the images to see objects relationships!</p>
   </div>
 </div>
 
