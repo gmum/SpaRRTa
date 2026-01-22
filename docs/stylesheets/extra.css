@@ -426,6 +426,201 @@
   background: var(--sparrta-primary-light);
 }
 
+/* ==================== PREDICTION DEMO ==================== */
+.prediction-demo-container {
+  margin: 3rem 0;
+  padding: 2rem;
+  background: var(--sparrta-card-bg);
+  border-radius: 1rem;
+  border: 1px solid rgba(124, 77, 255, 0.2);
+}
+
+.prediction-demo-controls {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.prediction-demo-select-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 200px;
+}
+
+.prediction-demo-select-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--sparrta-text-primary);
+}
+
+.prediction-demo-select {
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(124, 77, 255, 0.3);
+  border-radius: 0.5rem;
+  color: var(--sparrta-text-primary);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.prediction-demo-select:hover {
+  border-color: var(--sparrta-primary);
+  background: rgba(124, 77, 255, 0.1);
+}
+
+.prediction-demo-select:focus {
+  outline: none;
+  border-color: var(--sparrta-primary);
+  box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.2);
+}
+
+.prediction-demo-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 2rem;
+  background: linear-gradient(135deg, var(--sparrta-primary), var(--sparrta-accent));
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(124, 77, 255, 0.3);
+  white-space: nowrap;
+}
+
+.prediction-demo-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(124, 77, 255, 0.4);
+}
+
+.prediction-demo-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.prediction-demo-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-icon {
+  font-size: 1.2rem;
+}
+
+.prediction-demo-images {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.prediction-demo-images.show-prediction {
+  grid-template-columns: 1fr 1fr;
+}
+
+.prediction-image-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.prediction-image-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--sparrta-text-secondary);
+  text-align: center;
+}
+
+.prediction-image-container {
+  position: relative;
+  width: 100%;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  cursor: crosshair;
+}
+
+.prediction-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: opacity 0.3s ease;
+}
+
+.prediction-tooltip {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  max-width: 200px;
+  border: 1px solid rgba(124, 77, 255, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.prediction-tooltip.visible {
+  opacity: 1;
+}
+
+.prediction-tooltip strong {
+  color: var(--sparrta-primary-light);
+}
+
+.prediction-demo-info {
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(124, 77, 255, 0.2);
+}
+
+.prediction-demo-info p {
+  margin: 0.5rem 0;
+  color: var(--sparrta-text-primary);
+}
+
+.prediction-demo-info strong {
+  color: var(--sparrta-primary-light);
+}
+
+.prediction-demo-note {
+  margin-top: 1rem !important;
+  font-size: 0.9rem;
+  color: var(--sparrta-text-secondary);
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .prediction-demo-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .prediction-demo-select-group {
+    min-width: 100%;
+  }
+  
+  .prediction-demo-images.show-prediction {
+    grid-template-columns: 1fr;
+  }
+  
+  .prediction-demo-container {
+    padding: 1.5rem;
+  }
+}
+
 /* ==================== RESULTS TABLES ==================== */
 .results-table {
   width: 100%;

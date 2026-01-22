@@ -99,6 +99,62 @@ We evaluate a diverse suite of VFMs spanning different learning paradigms:
 | **DeiT** | ViT-B/16 | Classification + Distillation | ImageNet-1k |
 | **CLIP** | ViT-B/16 | Image-Text Contrastive | Web Image-Text (WIT) |
 
+## Interactive Prediction Demo
+
+Explore spatial relation predictions from the **VGGT** model using our interactive demo. Select an environment and viewpoint to see how the model predicts spatial relations between objects.
+
+<div class="prediction-demo-container">
+  <div class="prediction-demo-controls">
+    <div class="prediction-demo-select-group">
+      <label for="prediction-env-select">Environment:</label>
+      <select id="prediction-env-select" class="prediction-demo-select">
+        <option value="Bridge">Bridge</option>
+        <option value="Forest">Forest</option>
+        <option value="City">City</option>
+        <option value="Desert">Desert</option>
+        <option value="Winter_Town">Winter Town</option>
+      </select>
+    </div>
+    
+    <div class="prediction-demo-select-group">
+      <label for="prediction-viewpoint-select">Viewpoint:</label>
+      <select id="prediction-viewpoint-select" class="prediction-demo-select">
+        <option value="camera">Camera (Egocentric)</option>
+        <option value="human">Human (Allocentric)</option>
+      </select>
+    </div>
+    
+    <button id="prediction-predict-btn" class="prediction-demo-btn">
+      <span class="btn-icon">🔮</span>
+      Predict
+    </button>
+  </div>
+  
+  <div class="prediction-demo-images" id="prediction-images-container">
+    <div class="prediction-image-wrapper">
+      <div class="prediction-image-label">Original Image</div>
+      <div class="prediction-image-container" id="prediction-original-container">
+        <img id="prediction-original-img" src="../imgs/predictions/Bridge/original.jpg" alt="Original Scene" class="prediction-image">
+        <div class="prediction-tooltip" id="prediction-tooltip"></div>
+      </div>
+    </div>
+    
+    <div class="prediction-image-wrapper prediction-prediction-wrapper" id="prediction-prediction-wrapper" style="display: none;">
+      <div class="prediction-image-label">VGGT Prediction</div>
+      <div class="prediction-image-container" id="prediction-prediction-container">
+        <img id="prediction-prediction-img" src="" alt="Prediction" class="prediction-image">
+        <div class="prediction-tooltip" id="prediction-tooltip-pred"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="prediction-demo-info" id="prediction-info">
+    <p><strong>Reference Object:</strong> <span id="prediction-reference">Tree</span></p>
+    <p><strong>Target Object:</strong> <span id="prediction-target">Car</span></p>
+    <p class="prediction-demo-note">💡 Hover over the images to see object locations</p>
+  </div>
+</div>
+
 ## Probing Methodology
 
 We evaluate frozen VFM representations using lightweight probing heads:

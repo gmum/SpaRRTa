@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initScrollAnimations();
   initImageZoom();
   initSceneVizSlider();
+  initPredictionDemo();
 });
 
 /**
@@ -352,6 +353,172 @@ function initSceneVizSlider() {
   
   // Initialize
   updateImage(0);
+}
+
+/**
+ * Prediction Demo
+ */
+function initPredictionDemo() {
+  const container = document.querySelector('.prediction-demo-container');
+  if (!container) return;
+  
+  // Prediction data from matching.yaml
+  const predictionData = {
+    'Bridge': {
+      original: '../imgs/predictions/Bridge/original.jpg',
+      camera: '../imgs/predictions/Bridge/blended_camera.jpg',
+      human: '../imgs/predictions/Bridge/blended_human.jpg',
+      camera_reference: 'Tree',
+      camera_target: 'Car',
+      human_reference: 'Tree',
+      human_target: 'Car'
+    },
+    'Forest': {
+      original: '../imgs/predictions/Forest/original.jpg',
+      camera: '../imgs/predictions/Forest/blended_camera.jpg',
+      human: '../imgs/predictions/Forest/blended_human.jpg',
+      camera_reference: 'Tree',
+      camera_target: 'Human',
+      human_reference: 'Rock',
+      human_target: 'Tree'
+    },
+    'City': {
+      original: '../imgs/predictions/City/original.jpg',
+      camera: '../imgs/predictions/City/blended_camera.jpg',
+      human: '../imgs/predictions/City/blended_human.jpg',
+      camera_reference: 'Traffic Cone',
+      camera_target: 'Motorcycle',
+      human_reference: 'Traffic Cone',
+      human_target: 'Motorcycle'
+    },
+    'Desert': {
+      original: '../imgs/predictions/Desert/original.jpg',
+      camera: '../imgs/predictions/Desert/blended_camera.jpg',
+      human: '../imgs/predictions/Desert/blended_human.jpg',
+      camera_reference: 'Rock',
+      camera_target: 'Car',
+      human_reference: 'Rock',
+      human_target: 'Car'
+    },
+    'Winter_Town': {
+      original: '../imgs/predictions/Winter_Town/original.jpg',
+      camera: '../imgs/predictions/Winter_Town/blended_camera.jpg',
+      human: '../imgs/predictions/Winter_Town/blended_human.jpg',
+      camera_reference: 'Snowman',
+      camera_target: 'Husky',
+      human_reference: 'Snowman',
+      human_target: 'Husky'
+    }
+  };
+  
+  const envSelect = document.getElementById('prediction-env-select');
+  const viewpointSelect = document.getElementById('prediction-viewpoint-select');
+  const predictBtn = document.getElementById('prediction-predict-btn');
+  const originalImg = document.getElementById('prediction-original-img');
+  const predictionImg = document.getElementById('prediction-prediction-img');
+  const predictionWrapper = document.getElementById('prediction-prediction-wrapper');
+  const imagesContainer = document.getElementById('prediction-images-container');
+  const referenceSpan = document.getElementById('prediction-reference');
+  const targetSpan = document.getElementById('prediction-target');
+  const tooltip = document.getElementById('prediction-tooltip');
+  const tooltipPred = document.getElementById('prediction-tooltip-pred');
+  const originalContainer = document.getElementById('prediction-original-container');
+  const predictionContainer = document.getElementById('prediction-prediction-container');
+  
+  let currentEnv = envSelect.value;
+  let currentViewpoint = viewpointSelect.value;
+  
+  // Update original image and info when environment/viewpoint changes
+  function updateOriginalImage() {
+    const data = predictionData[currentEnv];
+    if (!data) return;
+    
+    originalImg.src = data.original;
+    
+    // Update reference and target based on viewpoint
+    if (currentViewpoint === 'camera') {
+      referenceSpan.textContent = data.camera_reference;
+      targetSpan.textContent = data.camera_target;
+    } else {
+      referenceSpan.textContent = data.human_reference;
+      targetSpan.textContent = data.human_target;
+    }
+    
+    // Hide prediction when changing settings
+    predictionWrapper.style.display = 'none';
+    imagesContainer.classList.remove('show-prediction');
+  }
+  
+  // Show prediction
+  function showPrediction() {
+    const data = predictionData[currentEnv];
+    if (!data) return;
+    
+    const predictionFile = currentViewpoint === 'camera' ? data.camera : data.human;
+    predictionImg.src = predictionFile;
+    
+    predictionWrapper.style.display = 'flex';
+    imagesContainer.classList.add('show-prediction');
+  }
+  
+  // Tooltip functionality - setup once
+  let tooltipReference = '';
+  let tooltipTarget = '';
+  
+  function updateTooltipContent() {
+    const data = predictionData[currentEnv];
+    if (!data) return;
+    
+    tooltipReference = currentViewpoint === 'camera' ? data.camera_reference : data.human_reference;
+    tooltipTarget = currentViewpoint === 'camera' ? data.camera_target : data.human_target;
+  }
+  
+  // Setup tooltip handlers (only once)
+  function setupTooltipHandlers(container, tooltipEl) {
+    container.addEventListener('mousemove', (e) => {
+      const rect = container.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      // Show tooltip with reference and target info
+      tooltipEl.innerHTML = `
+        <strong>Reference:</strong> ${tooltipReference}<br>
+        <strong>Target:</strong> ${tooltipTarget}
+      `;
+      tooltipEl.style.left = `${x + 10}px`;
+      tooltipEl.style.top = `${y + 10}px`;
+      tooltipEl.classList.add('visible');
+    });
+    
+    container.addEventListener('mouseleave', () => {
+      tooltipEl.classList.remove('visible');
+    });
+  }
+  
+  // Initialize tooltips once
+  setupTooltipHandlers(originalContainer, tooltip);
+  setupTooltipHandlers(predictionContainer, tooltipPred);
+  
+  // Event listeners
+  envSelect.addEventListener('change', (e) => {
+    currentEnv = e.target.value;
+    updateOriginalImage();
+    updateTooltipContent();
+  });
+  
+  viewpointSelect.addEventListener('change', (e) => {
+    currentViewpoint = e.target.value;
+    updateOriginalImage();
+    updateTooltipContent();
+  });
+  
+  predictBtn.addEventListener('click', () => {
+    showPrediction();
+  });
+  
+  // Initialize
+  updateOriginalImage();
+  updateTooltipContent();
 }
 
 /**
