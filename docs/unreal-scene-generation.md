@@ -204,7 +204,7 @@ Ambiguity zones are defined as conical regions centered along the diagonals:
 
 !!! info "Rejection Sampling"
     
-    The pipeline automatically discards configurations where the target object lies within ±22.5° of a diagonal boundary, ensuring all retained samples have mathematically precise labels.
+    The pipeline automatically discards configurations where the target object lies within ±15° of a diagonal boundary, ensuring all retained samples have mathematically precise labels.
 
 ## Technical Implementation
 
