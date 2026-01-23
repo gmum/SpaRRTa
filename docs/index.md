@@ -213,7 +213,7 @@ If you find SpaRRTa useful in your research, please cite our paper:
 
 <div class="citation-box">
   <button class="citation-copy-btn">📋 Copy BibTeX</button>
-  <pre><code class="language-bibtex">@misc{kargin2025sparrta,
+  <pre><code class="language-bibtex">@misc{kargin2026sparrta,
   title={SpaRRTa: A Synthetic Benchmark for Evaluating Spatial Intelligence in Visual Foundation Models},
   author={Turhan Can Kargin and Wojciech Jasiński and Adam Pardyl and Bartosz Zieliński and Marcin Przewięźlikowski},
   year={2026},

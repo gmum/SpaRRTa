@@ -40,11 +40,14 @@ Check out our [Getting Started Guide](../../getting-started.md/) to begin using 
 If you use SpaRRTa in your research, please cite our paper:
 
 ```bibtex
-@article{kargin2025sparrta,
-  title={SpaRRTa: A Synthetic Benchmark for Evaluating Spatial Intelligence in Visual Foundation Models},
-  author={Kargin, Turhan Can and Jasiński, Wojciech and Pardyl, Adam and Zieliński, Bartosz and Przewięźlikowski, Marcin},
-  journal={arXiv preprint arXiv:2601.11729},
-  year={2025}
+@misc{kargin2026sparrta,
+      title={SpaRRTa: A Synthetic Benchmark for Evaluating Spatial Intelligence in Visual Foundation Models}, 
+      author={Turhan Can Kargin and Wojciech Jasiński and Adam Pardyl and Bartosz Zieliński and Marcin Przewięźlikowski},
+      year={2026},
+      eprint={2601.11729},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2601.11729}, 
 }
 ```
 
