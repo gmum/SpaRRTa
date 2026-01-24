@@ -18,3 +18,18 @@
 
 - *Jan. 2026:* Codebase will be released soon!
 - *Jan. 2026:* Paper is available on [arXiv](https://arxiv.org/abs/2601.11729).
+
+--------------------------------
+
+If you find this research useful, please consider citing:
+
+```bibtex
+@misc{kargin2026sparrta,
+  title={SpaRRTa: A Synthetic Benchmark for Evaluating Spatial Intelligence in Visual Foundation Models},
+  author={Turhan Can Kargin and Wojciech Jasiński and Adam Pardyl and Bartosz Zieliński and Marcin Przewięźlikowski},
+  year={2026},
+  eprint={2601.11729},
+  archivePrefix={arXiv},
+  primaryClass={cs.CV},
+  url={https://arxiv.org/abs/2601.11729}
+}
