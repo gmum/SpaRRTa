@@ -146,7 +146,7 @@ The table below shows the **mean rank** across all environments and probing meth
 | DINO | 49.07 | 62.11 | 64.38 |
 | DINO-v2 (B/14) | 47.90 | 65.91 | 71.20 |
 | DINO-v2 reg (B/14) | 48.23 | 63.80 | 68.06 |
-| **DINO-v2 reg (L/14)** | **51.68** | **66.86** | **76.10** |
+| **DINO-v2 reg (L/14)** | **51.68** | **66.86** | 76.10 |
 | DINOv3 | 49.51 | 60.87 | 72.05 |
 | **VGGT (L/14)** | 42.70 | 65.71 | **76.65** |
 | SPA | 38.37 | 55.52 | 66.14 |
@@ -168,15 +168,15 @@ The table below shows the **mean rank** across all environments and probing meth
 
 From easiest to hardest:
 
-1. **Desert** - Sparse, homogeneous, minimal occlusion
-2. **Forest** - Natural complexity but clear object boundaries
+1. **Forest** - Natural complexity but clear object boundaries
+2. **Desert** - Sparse, homogeneous, minimal occlusion
 3. **Bridge** - Mixed complexity, infrastructure elements
 4. **Winter Town** - Snow occlusion, village clutter
 5. **City** - Dense urban geometry, maximum visual complexity
 
 !!! info "Key Insight"
     
-    Environmental complexity significantly affects performance. Models struggle more in **cluttered environments** (City, Winter Town) compared to **sparse environments** (Desert, Forest).
+    Environmental complexity significantly affects performance. Models struggle more in **cluttered environments** (City, Winter Town) compared to **sparse environments** (Forest, Desert).
 
 ## Probing Method Comparison
 
@@ -267,8 +267,8 @@ Linear Probing < AbMILP < Efficient Probing
 </div>
 
 <figure markdown>
-  ![Human to Others](imgs/attention_dynamics/ViT_Large/Human_to_others_agg.png){ width="100%" }
-  <figcaption>Attention flow from Human object to other scene elements across transformer layers.</figcaption>
+  ![Human to Others](imgs/attention_dynamics/ViT_Large/cls_and_human_to_others_agg.png){ width="100%" }
+  <figcaption>Attention flow from the global [CLS] token (top row) and human patches (bottom row) to the rest of the patches (Human, Truck, Tree, Background, [CLS] and Register) for both DINO-v2 and VGGT backbones across transformer layers. The two columns on the left show absolute attention scores for DINO-v2 and VGGT, while the right column displays the differential (VGGT - DINOv2) to quantify the divergence in attention dynamics.</figcaption> 
 </figure>
 
 ---

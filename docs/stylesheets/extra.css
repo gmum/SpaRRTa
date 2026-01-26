@@ -195,18 +195,39 @@
 /* ==================== FEATURE CARDS ==================== */
 .feature-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
   margin: 2rem 0;
+  max-width: 100%;
+}
+
+@media (max-width: 1400px) {
+  .feature-grid {
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 1200px) {
+  .feature-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .feature-card {
   background: var(--sparrta-card-bg);
   border: 1px solid rgba(124, 77, 255, 0.2);
-  border-radius: 1rem;
-  padding: 1.5rem;
+  border-radius: 0.75rem;
+  padding: 0.875rem;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
+  min-width: 0;
 }
 
 .feature-card:hover {
@@ -216,21 +237,21 @@
 }
 
 .feature-icon {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .feature-title {
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--sparrta-text-primary);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
 }
 
 .feature-description {
   color: var(--sparrta-text-secondary);
-  font-size: 0.95rem;
-  line-height: 1.6;
+  font-size: 0.8rem;
+  line-height: 1.4;
 }
 
 /* ==================== AUTHOR CARDS ==================== */

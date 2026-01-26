@@ -7,6 +7,11 @@ description: Comprehensive guide to using SpaRRTa for spatial reasoning evaluati
 
 This guide provides detailed documentation on using SpaRRTa for evaluating spatial reasoning in Visual Foundation Models.
 
+!!! warning "Coming Soon"
+    
+    This section is currently under development. Full documentation will be available soon.
+
+<!--
 ## Dataset Structure
 
 ### Directory Layout
@@ -491,3 +496,4 @@ set_seed(42)
   <a href="../results/" class="md-button">See Results</a>
 </div>
 
+-->

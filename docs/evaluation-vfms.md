@@ -101,7 +101,7 @@ We evaluate a diverse suite of VFMs spanning different learning paradigms:
 
 ## Interactive Prediction Demo
 
-Explore spatial relation predictions from the **VGGT** model using our interactive demo. Select an environment and viewpoint to see how the model predicts spatial relations between objects.
+Explore spatial relation predictions from the **VGGT** model using our interactive demo. Efficient Probing is used for prediction. Attention maps of efficient probing heads are visualized to show which regions of the image the model is paying attention to. Select an environment and viewpoint to see how the model predicts spatial relations between objects.
 
 <div class="prediction-demo-container">
   <div class="prediction-demo-controls">
@@ -181,9 +181,11 @@ We evaluate frozen VFM representations using lightweight probing heads:
     **Global Average Pooling + Linear Classifier**
     
     ```python
-    features = vfm.extract_patches(image)  # [N, D]
-    global_feat = features.mean(dim=0)     # [D]
-    prediction = linear_layer(global_feat)  # [4]
+    dataloader = DataLoader(dataset, batch_size=batch_size)
+    for images in dataloader:
+        features = vfm.forward_features(images)  # [Batch_size, Num_patches, Dimension]
+        global_feat = features.mean(dim=1)     # [Batch_size, Dimension]
+        prediction = linear_layer(global_feat)  # [Batch_size, 4]
     ```
     
     **Pros:** Simple baseline, standard evaluation protocol
@@ -195,11 +197,13 @@ We evaluate frozen VFM representations using lightweight probing heads:
     **Attention-Based Multiple Instance Learning Pooling**
     
     ```python
-    features = vfm.extract_patches(image)      # [N, D]
-    attention = attention_mlp(features)        # [N, 1]
-    attention = softmax(attention, dim=0)      # [N, 1]
-    weighted_feat = (attention * features).sum(dim=0)  # [D]
-    prediction = linear_layer(weighted_feat)   # [4]
+    dataloader = DataLoader(dataset, batch_size=batch_size)
+    for images in dataloader:
+      features = vfm.forward_features(images)  # [Batch_size, Num_patches, Dimension]
+      attn_map = linear_layer(features, 1)        # [Batch_size, Num_patches, 1]
+      attn_map = softmax(attn_map, dim=1)      # [Batch_size, Num_patches, 1]
+      weighted_feat = (attn_map * features).sum(dim=1)  # [Batch_size, Dimension]
+      prediction = linear_layer(weighted_feat)   # [Batch_size, 4]
     ```
     
     **Pros:** Learns to focus on relevant patches
@@ -211,10 +215,16 @@ We evaluate frozen VFM representations using lightweight probing heads:
     **Multi-Query Cross-Attention**
     
     ```python
-    features = vfm.extract_patches(image)      # [N, D]
-    queries = learnable_queries                # [Q, D']
-    attended = cross_attention(queries, features)  # [Q, D']
-    prediction = linear_layer(attended.flatten())  # [4]
+    dataloader = DataLoader(dataset, batch_size=batch_size)
+    queries = Parameter(torch.randn(1, num_queries, dimension) * 0.02)  # [1, Num_queries, Dimension]
+    values = linear_layer(dimension, (dimension/d_out)/num_queries)
+    for images in dataloader:
+      features = vfm.forward_features(images)  # [Batch_size, Num_patches, Dimension]
+      attn_map = queries @ features.transpose(-2, -1)  # [Batch_size, Num_queries, Num_patches]
+      attn_map = softmax(attn_map, dim=-1)  # [Batch_size, Num_queries, Num_patches]
+      weighted_feat = matmul(attn_map, values)  # [Batch_size, Num_queries, (Dimension/d_out)/Num_queries]
+      weighted_feat = weighted_feat.view(Batch_size, -1)  # [Batch_size, Dimension/d_out]
+      prediction = linear_layer(weighted_feat)   # [Batch_size, 4]
     ```
     
     **Pros:** Multiple queries can specialize to different objects/regions
@@ -226,13 +236,15 @@ We evaluate frozen VFM representations using lightweight probing heads:
 | Parameter | Linear | AbMILP | Efficient |
 |-----------|--------|--------|-----------|
 | Optimizer | AdamW | AdamW | AdamW |
+| Scheduler | Cosine Decay | Cosine Decay | Cosine Decay |
 | Learning Rate | 1e-2, 1e-3, 1e-4 | 1e-2, 1e-3, 1e-4 | 1e-2, 1e-3, 1e-4 |
 | Weight Decay | 0.001 | 0.001 | 0.001 |
 | Dropout | 0.2, 0.4, 0.6 | 0.2, 0.4, 0.6 | 0.2, 0.4, 0.6 |
 | Batch Size | 256 | 256 | 256 |
 | Epochs | 1000 | 500 | 500 |
 | Warmup Steps | 200 | 100 | 100 |
-| Queries (Q) | - | - | 4 |
+| Queries (num_queries) | - | - | 4 |
+| Output Dimension (d_out) | D_i | D_i | D_i/8 |
 
 ## Evaluation Protocol
 
@@ -262,11 +274,11 @@ For each environment and object triple:
 
 ```mermaid
 graph LR
-    A[Linear Probing] -->|"< worse"| B[AbMILP]
-    B -->|"< worse"| C[Efficient Probing]
+    A[Linear Probing] -->|"worse than"| B[AbMILP]
+    B -->|"worse than"| C[Efficient Probing]
     
     style A fill:#ff6b6b,color:#fff
-    style B fill:#feca57,color:#000
+    style B fill:#4a90e2,color:#fff
     style C fill:#1dd1a1,color:#fff
 ```
 
@@ -285,13 +297,12 @@ graph LR
 
 1. **VGGT** (with Efficient Probing) - Best overall spatial reasoning
 2. **DINO-v2 (+reg) ViT-L** - Strong across all probing methods
-3. **DINOv3** - Excellent with Efficient Probing
+3. **DINOv3** - Best ViT-B model with Efficient Probing
 4. **MAE** - Surprisingly strong performance
 
 **Underperformers:**
 
-- **CLIP** - Limited spatial awareness
-- **DeiT** - Semantic features don't transfer to spatial tasks
+- **CLIP** and **DeiT** - Limited spatial awareness, their semantic features don't transfer to spatial tasks
 
 ### Task Difficulty
 

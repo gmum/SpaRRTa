@@ -70,6 +70,7 @@ SpaRRTa includes **five diverse high-fidelity environments** to ensure robust ev
     
     A vast, arid landscape characterized by open terrain, sand dunes, and high-contrast lighting. This environment is sparse and texture-homogeneous.
     
+    - **Source**: [Realistic Desert Pack](https://www.fab.com/listings/3d1ccab4-8a4c-470f-a5b8-4a91ca5040d1)
     - **Characteristics**: Open terrain, high contrast lighting, minimal occlusion
     - **Objects**: Camel, Barrel, Cactus, Rocks
 
@@ -79,6 +80,7 @@ SpaRRTa includes **five diverse high-fidelity environments** to ensure robust ev
     
     A snow-covered setting reflecting a typical small Eastern European town with cold lighting, snow textures, and village buildings.
     
+    - **Source**: [Russian Winter Town](https://www.fab.com/listings/5bd7045e-b0ae-45a4-ab00-72b2060ab4c5)
     - **Characteristics**: Cold lighting, snow textures, village architecture
     - **Objects**: Husky, Deer, Snowman
 
@@ -88,6 +90,7 @@ SpaRRTa includes **five diverse high-fidelity environments** to ensure robust ev
     
     A valley scene centered around a large bridge infrastructure with mixed natural and man-made elements.
     
+    - **Source**: [Automotive Bridge Scene](https://www.fab.com/listings/a472df9d-9179-4743-8d41-335f9ef55546)
     - **Characteristics**: Infrastructure elements, valley terrain, mixed complexity
     - **Objects**: Bicycle, Trash Can, Vehicle
 
@@ -174,7 +177,7 @@ Generate high-fidelity imagery using Unreal Engine 5:
 
 - Ray-traced RGB image with dynamic global illumination
 - Ground-truth segmentation masks for validation
-- Resolution: 224×224 (standard VFM input size)
+- Resolution: 2048x2048 - Later, it is downsampled to 224×224 (standard VFM input size)
 
 #### 4. Get Ground Truth
 
@@ -190,8 +193,9 @@ Extract spatial relation labels:
 A key challenge in spatial classification is defining precise boundaries between classes. SpaRRTa implements strict **rejection sampling** to eliminate label noise:
 
 <figure markdown>
-  ![Scene Examples](imgs/scene_examples/2d_scene_winter.png){ width="60%" }
-  <figcaption>Visualization of valid placement zones and ambiguity exclusion zones (red/gray).</figcaption>
+  ![Scene Examples](imgs/scene_plots/legend/sparrta_legend.png)
+  ![Scene Examples](imgs/scene_plots/sparrta_environment_viz_0003.png)
+  <figcaption>Visualization of valid placement zones and ambiguity exclusion zones (red/gray). Gray zones are the ambiguity exclusion zone for Camera Viewpoint. Red zones are the ambiguity exclusion zone for Human Viewpoint.</figcaption>
 </figure>
 
 ### Exclusion Zones
@@ -220,37 +224,168 @@ Ambiguity zones are defined as conical regions centered along the diagonals:
 
 ### Camera Configuration
 
+The camera system uses Unreal Engine's `CineCameraActor` with standardized settings:
+
 ```python
-# Standardized camera settings
-SENSOR_WIDTH = 50  # mm
-FOCAL_LENGTH = 50  # mm
-RESOLUTION = (224, 224)  # pixels
-FOV = 2 * arctan(SENSOR_WIDTH / (2 * FOCAL_LENGTH))  # ~53°
+def create_camera():
+    """
+    Initialize CineCameraActor with standardized parameters.
+    """
+    # Filmback settings (sensor dimensions)
+    sensor_width = 50.0   # mm
+    sensor_height = 50.0  # mm
+    
+    # Lens settings
+    focal_length = 50.0   # mm
+    aperture = 10.0      # f-stop
+    
+    # Calculate FOV from sensor and focal length
+    horizontal_fov = 2 * arctan(0.5 * sensor_width / focal_length)
+    vertical_fov = 2 * arctan(0.5 * sensor_height / focal_length)
+    # Result: ~53° horizontal FOV
+    fov = (horizontal_fov, vertical_fov)
+    
+    # Create camera with these settings
+    camera = CineCameraActor(location, rotation)
+    camera.set_filmback(sensor_width, sensor_height)
+    camera.set_focal_length(focal_length)
+    camera.set_aperture(aperture)
+    
+    return camera
 ```
 
 ### Object Placement Algorithm
 
+Objects are placed using an iterative rejection sampling approach with physics-aware terrain adaptation:
+
 ```python
-def place_objects(environment, objects):
+def place_objects(environment, objects, max_attempts=10):
     """
     Place objects with physics-aware terrain adaptation.
+    Uses iterative rejection sampling to ensure valid configurations.
     """
-    center = sample_center_point(environment)
+    # Sample center point for object cluster
+    center_x = sample_gaussian(environment_center_x, sample_radius)
+    center_y = sample_gaussian(environment_center_y, sample_radius)
+    center_z = environment_base_z
     
-    for obj in objects:
-        # Sample position around center
-        position = center + sample_gaussian(mean=0, std=MAX_DISTANCE)
+    for attempt in range(max_attempts):
+        valid_placement = True
         
-        # Raycast to find ground level
-        ground_z = raycast_terrain(position.x, position.y)
-        position.z = ground_z + obj.bounding_box.height / 2
-        
-        # Validate no collisions
-        if check_aabb_overlap(obj, placed_objects):
-            continue  # Reject and resample
+        for obj in objects:
+            # Sample random rotation
+            rotation = random_rotation(yaw_range=(0, 360))
             
-        spawn_object(obj, position)
+            # Sample X, Y positions around center using Gaussian distribution
+            obj_x = random_gaussian(center_x, object_proximity_std)
+            obj_y = random_gaussian(center_y, object_proximity_std)
+            
+            # Perform line trace to find ground height at (X, Y)
+            ground_z = detect_ground_at_position(obj_x, obj_y, center_z)
+            
+            # Calculate proper Z position accounting for object bounds
+            # Get how much object extends below its origin
+            object_ground_offset = obj.get_ground_offset()
+            
+            # Place object so bottom surface touches ground
+            spawn_z = ground_z - object_ground_offset + safety_margin
+            
+            position = Vector(obj_x, obj_y, spawn_z)
+            obj.move_to(position, rotation)
+        
+        # Validate configuration
+        for i in range(len(objects)):
+            for j in range(i + 1, len(objects)):
+                # Check for AABB overlap (collision detection)
+                if objects[i].overlaps(objects[j]):
+                    valid_placement = False
+                    break
+                
+                # Check objects are not too far apart
+                if objects[i].distance_to(objects[j]) > max_distance:
+                    valid_placement = False
+                    break
+            
+            if not valid_placement:
+                break
+        
+        if valid_placement:
+            return True, (center_x, center_y)
+    
+    # All attempts failed
+    return False, (center_x, center_y)
 ```
+
+### Camera Sampling with Screenshot
+
+Camera positioning uses iterative sampling to ensure all objects are properly framed:
+
+```python
+def sample_camera(camera, objects, object_center, max_attempts=15):
+    """
+    Sample camera position and orientation with validation.
+    Ensures all objects are visible and properly framed.
+    """
+    center_x, center_y = object_center
+    
+    # Calculate average Z position of all objects
+    avg_object_z = mean([obj.get_location().z for obj in objects])
+    
+    for attempt in range(max_attempts):
+        # Sample camera position around object cluster
+        camera_x = random_uniform(center_x - camera_range, center_x + camera_range)
+        camera_y = random_uniform(center_y - camera_range, center_y + camera_range)
+        camera_z = random_uniform(avg_object_z, avg_object_z + camera_height_range)
+        
+        camera_position = Vector(camera_x, camera_y, camera_z)
+        camera.move_to(camera_position)
+        
+        # Orient camera to look at centroid of all objects
+        object_centroid = calculate_centroid([obj.get_location() for obj in objects])
+        camera.look_at_many(objects)
+        
+        # Validate all objects are within camera FOV
+        object_angles = []
+        for obj in objects:
+            # Calculate angle between camera forward vector and object
+            angle = camera.angle_to(obj)
+            object_angles.append(angle)
+        
+        max_angle = max(object_angles)
+        min_angle = min(object_angles)
+        
+        # Check objects are within FOV bounds
+        # Reject if any object is too far from center (outside FOV)
+        if max_angle > (camera.fov - margin):
+            continue  # Reject and resample
+        
+        # Reject if all objects are too close to center (too clustered)
+        if max_angle < min_angle_threshold:
+            continue  # Reject and resample
+        
+        # Valid camera configuration found
+        return True
+    
+    # All attempts failed
+    return False
+```
+
+!!! info "Iterative Rejection Sampling"
+    
+    The pipeline uses iterative rejection sampling with configurable maximum attempts:
+
+    - **Object placement**: Up to X attempts to find valid non-overlapping configurations
+    - **Camera sampling**: Up to Y attempts to find valid camera positions with all objects in frame
+    - Failed attempts are automatically discarded and resampled
+
+!!! note "Parameter Serialization"
+    
+    For each successfully generated scene, the pipeline serializes:
+
+    - Camera intrinsics (sensor dimensions, focal length, FOV, aperture)
+    - Camera extrinsics (position, rotation)
+    - Object positions and rotations
+    - All metadata saved to JSON files for reproducibility
 
 ## Dataset Statistics
 

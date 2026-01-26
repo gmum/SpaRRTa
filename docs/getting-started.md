@@ -7,6 +7,11 @@ description: Installation guide and quick start for SpaRRTa benchmark
 
 This guide will help you set up SpaRRTa for evaluating Visual Foundation Models on spatial reasoning tasks.
 
+!!! warning "Coming Soon"
+    
+    This section is currently under development. Full documentation will be available soon.
+
+<!--
 ## Prerequisites
 
 Before installing SpaRRTa, ensure you have the following:
@@ -319,3 +324,4 @@ SpaRRTa/
   </a>
 </div>
 
+-->

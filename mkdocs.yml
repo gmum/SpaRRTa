@@ -144,9 +144,9 @@ nav:
   - Home: index.md
   - Unreal Scene Generation: unreal-scene-generation.md
   - Evaluation of VFMs: evaluation-vfms.md
+  - More Results: results.md
   - Getting Started: getting-started.md
   - User Guide: user-guide.md
-  - More Results: results.md
   - Examples: examples.md
   - Blog:
     - blog/index.md
