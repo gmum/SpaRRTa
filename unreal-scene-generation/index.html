@@ -1,0 +1,2212 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Learn how SpaRRTa generates photorealistic synthetic scenes using Unreal Engine 5">
+      
+      
+        <meta name="author" content="Turhan Can Kargin et al.">
+      
+      
+        <link rel="canonical" href="https://gmum.github.io/SpaRRTa/unreal-scene-generation/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../evaluation-vfms/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../imgs/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Unreal Scene Generation - SpaRRTa</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-S4G8M79T0F"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-S4G8M79T0F",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-S4G8M79T0F",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#unreal-scene-generation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+              </button>
+            
+            
+  <div class="announcement-content">
+    🎉 <strong>Paper submitted!</strong> SpaRRTa benchmark for evaluating spatial intelligence in VFMs.
+    <a href="https://arxiv.org/abs/2601.11729" target="_blank">Read the paper →</a>
+  </div>
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="SpaRRTa" class="md-header__button md-logo" aria-label="SpaRRTa" data-md-component="logo">
+      
+  <img src="../imgs/favicon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SpaRRTa
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Unreal Scene Generation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"></path></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/gmum/SpaRRTa" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    gmum/SpaRRTa
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Unreal Scene Generation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../evaluation-vfms/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Evaluation of VFMs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../results/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  More Results
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../user-guide/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  User Guide
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../examples/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Examples
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../blog/" class="md-tabs__link">
+          
+  
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="SpaRRTa" class="md-nav__button md-logo" aria-label="SpaRRTa" data-md-component="logo">
+      
+  <img src="../imgs/favicon.png" alt="logo">
+
+    </a>
+    SpaRRTa
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/gmum/SpaRRTa" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    gmum/SpaRRTa
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unreal Scene Generation
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unreal Scene Generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-synthetic-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Synthetic Data?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evaluation-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluation Environments
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Evaluation Environments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#environment-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Details
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#asset-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Asset Library
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Asset Library">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#asset-selection-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Asset Selection Criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-generation-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Generation Pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Generation Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pipeline-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#geometric-ambiguity-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Geometric Ambiguity Control
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Geometric Ambiguity Control">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exclusion-zones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exclusion Zones
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#technical-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technical Implementation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Technical Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rendering-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rendering Stack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#camera-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Camera Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#object-placement-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Object Placement Algorithm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#camera-sampling-with-screenshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Camera Sampling with Screenshot
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataset-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dataset Statistics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scene-visualizations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scene Visualizations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scene Visualizations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#environment-asset-relations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment-Asset Relations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../evaluation-vfms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation of VFMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../results/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    More Results
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8">
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blog
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Blog
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8_2">
+        
+          
+          <label class="md-nav__link" for="__nav_8_2" id="__nav_8_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Archive
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Archive
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/archive/2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2025
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8_3">
+        
+          
+          <label class="md-nav__link" for="__nav_8_3" id="__nav_8_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Categories
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Categories
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/category/announcements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Announcements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-synthetic-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Synthetic Data?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evaluation-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluation Environments
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Evaluation Environments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#environment-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Details
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#asset-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Asset Library
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Asset Library">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#asset-selection-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Asset Selection Criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-generation-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Generation Pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Generation Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pipeline-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#geometric-ambiguity-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Geometric Ambiguity Control
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Geometric Ambiguity Control">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exclusion-zones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exclusion Zones
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#technical-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technical Implementation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Technical Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rendering-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rendering Stack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#camera-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Camera Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#object-placement-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Object Placement Algorithm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#camera-sampling-with-screenshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Camera Sampling with Screenshot
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataset-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dataset Statistics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scene-visualizations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scene Visualizations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scene Visualizations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#environment-asset-relations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment-Asset Relations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="unreal-scene-generation">Unreal Scene Generation<a class="headerlink" href="#unreal-scene-generation" title="Permanent link">¶</a></h1>
+<p>SpaRRTa leverages <strong>Unreal Engine 5</strong> to generate photorealistic synthetic images with precise control over object placement, camera positions, and environmental conditions. This enables the creation of a rigorous benchmark with mathematically precise ground-truth labels.</p>
+<h2 id="why-synthetic-data">Why Synthetic Data?<a class="headerlink" href="#why-synthetic-data" title="Permanent link">¶</a></h2>
+<div class="feature-grid">
+  <div class="feature-card">
+    <div class="feature-icon">🎯</div>
+    <div class="feature-title">Precise Control</div>
+    <div class="feature-description">
+      Full control over object positions, camera angles, and scene composition enables mathematically rigorous ground-truth labels.
+    </div>
+  </div>
+
+  <div class="feature-card">
+    <div class="feature-icon">📈</div>
+    <div class="feature-title">Scalability</div>
+    <div class="feature-description">
+      Generate arbitrary amounts of diverse data without expensive manual annotation or data collection.
+    </div>
+  </div>
+
+  <div class="feature-card">
+    <div class="feature-icon">🎨</div>
+    <div class="feature-title">Photorealism</div>
+    <div class="feature-description">
+      Unreal Engine 5's Lumen and Nanite technologies provide state-of-the-art visual fidelity.
+    </div>
+  </div>
+
+  <div class="feature-card">
+    <div class="feature-icon">🔄</div>
+    <div class="feature-title">Reproducibility</div>
+    <div class="feature-description">
+      Fully deterministic generation enables exact reproduction of experimental conditions.
+    </div>
+  </div>
+</div>
+
+<h2 id="evaluation-environments">Evaluation Environments<a class="headerlink" href="#evaluation-environments" title="Permanent link">¶</a></h2>
+<p>SpaRRTa includes <strong>five diverse high-fidelity environments</strong> to ensure robust evaluation across different visual domains:</p>
+<figure>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../imgs/main/environments_table.png" data-desc-position="bottom"><img alt="Environments" src="../imgs/main/environments_table.png" width="100%"></a>
+  </p>
+<figcaption>The five SpaRRTa evaluation environments: Forest, Desert, Winter Town, Bridge, and City.</figcaption>
+</figure>
+<h3 id="environment-details">Environment Details<a class="headerlink" href="#environment-details" title="Permanent link">¶</a></h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:5"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio"><input id="__tabbed_1_2" name="__tabbed_1" type="radio"><input id="__tabbed_1_3" name="__tabbed_1" type="radio"><input id="__tabbed_1_4" name="__tabbed_1" type="radio"><input id="__tabbed_1_5" name="__tabbed_1" type="radio"><div class="tabbed-labels"><label for="__tabbed_1_1">🌲 Forest</label><label for="__tabbed_1_2">🏜️ Desert</label><label for="__tabbed_1_3">🏔️ Winter Town</label><label for="__tabbed_1_4">🌉 Bridge</label><label for="__tabbed_1_5">🏙️ City</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><strong>Electric Dreams Environment</strong></p>
+<p>A sparse forest landscape with complex foliage, uneven terrain, and natural rock formations. This environment tests spatial reasoning in organic, unstructured settings.</p>
+<ul>
+<li><strong>Source</strong>: <a href="https://www.unrealengine.com/marketplace/en-US/product/electric-dreams-env">Electric Dreams (Epic Games)</a></li>
+<li><strong>Characteristics</strong>: Complex foliage, uneven terrain, natural lighting</li>
+<li><strong>Objects</strong>: Bear, Fox, Tent, Rocks, Trees</li>
+</ul>
+</div>
+<div class="tabbed-block">
+<p><strong>Arid Landscape</strong></p>
+<p>A vast, arid landscape characterized by open terrain, sand dunes, and high-contrast lighting. This environment is sparse and texture-homogeneous.</p>
+<ul>
+<li><strong>Source</strong>: <a href="https://www.fab.com/listings/3d1ccab4-8a4c-470f-a5b8-4a91ca5040d1">Realistic Desert Pack</a></li>
+<li><strong>Characteristics</strong>: Open terrain, high contrast lighting, minimal occlusion</li>
+<li><strong>Objects</strong>: Camel, Barrel, Cactus, Rocks</li>
+</ul>
+</div>
+<div class="tabbed-block">
+<p><strong>Eastern European Village</strong></p>
+<p>A snow-covered setting reflecting a typical small Eastern European town with cold lighting, snow textures, and village buildings.</p>
+<ul>
+<li><strong>Source</strong>: <a href="https://www.fab.com/listings/5bd7045e-b0ae-45a4-ab00-72b2060ab4c5">Russian Winter Town</a></li>
+<li><strong>Characteristics</strong>: Cold lighting, snow textures, village architecture</li>
+<li><strong>Objects</strong>: Husky, Deer, Snowman</li>
+</ul>
+</div>
+<div class="tabbed-block">
+<p><strong>Valley Infrastructure</strong></p>
+<p>A valley scene centered around a large bridge infrastructure with mixed natural and man-made elements.</p>
+<ul>
+<li><strong>Source</strong>: <a href="https://www.fab.com/listings/a472df9d-9179-4743-8d41-335f9ef55546">Automotive Bridge Scene</a></li>
+<li><strong>Characteristics</strong>: Infrastructure elements, valley terrain, mixed complexity</li>
+<li><strong>Objects</strong>: Bicycle, Trash Can, Vehicle</li>
+</ul>
+</div>
+<div class="tabbed-block">
+<p><strong>Modern Metropolis</strong></p>
+<p>A large-scale, modern American metropolis featuring high-rise architecture, paved roads, and complex urban geometry.</p>
+<ul>
+<li><strong>Source</strong>: <a href="https://www.unrealengine.com/marketplace/en-US/product/city-sample">City Sample (Epic Games)</a></li>
+<li><strong>Characteristics</strong>: Dense urban geometry, complex occlusion, varied lighting</li>
+<li><strong>Objects</strong>: Motorcycle, Traffic Cone, Fire Hydrant</li>
+</ul>
+</div>
+</div>
+</div>
+<h2 id="asset-library">Asset Library<a class="headerlink" href="#asset-library" title="Permanent link">¶</a></h2>
+<figure>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../imgs/main/assets.png" data-desc-position="bottom"><img alt="Assets" src="../imgs/main/assets.png" width="100%"></a>
+  </p>
+<figcaption>SpaRRTa's curated asset library spanning Animals, Vehicles, Nature, and Human categories.</figcaption>
+</figure>
+<h3 id="asset-selection-criteria">Asset Selection Criteria<a class="headerlink" href="#asset-selection-criteria" title="Permanent link">¶</a></h3>
+<p>Our asset selection follows specific criteria to ensure valid spatial reasoning evaluation:</p>
+<ol>
+<li><strong>ImageNet Alignment</strong>: Objects align with common ImageNet super-categories to ensure VFMs can recognize them</li>
+<li><strong>Isotropic Sources</strong>: Source objects (rocks, trees, cones) are rotationally symmetric to minimize orientation ambiguity</li>
+<li><strong>Environmental Coherence</strong>: Objects naturally fit their respective environments (e.g., camels in desert)</li>
+<li><strong>Visual Distinctiveness</strong>: Objects are clearly distinguishable from backgrounds and each other</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Assets</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Animals</strong></td>
+<td>Bear, Fox, Camel, Husky, Deer</td>
+</tr>
+<tr>
+<td><strong>Vehicles</strong></td>
+<td>Car, Taxi, Motorcycle, Bicycle</td>
+</tr>
+<tr>
+<td><strong>Nature</strong></td>
+<td>Trees, Rocks, Cactus</td>
+</tr>
+<tr>
+<td><strong>Objects</strong></td>
+<td>Tent, Barrel, Trash Can, Traffic Cone, Fire Hydrant, Snowman</td>
+</tr>
+<tr>
+<td><strong>Humans</strong></td>
+<td>Human agent (viewpoint for allocentric tasks)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="data-generation-pipeline">Data Generation Pipeline<a class="headerlink" href="#data-generation-pipeline" title="Permanent link">¶</a></h2>
+<figure>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../imgs/main/pipeline.png" data-desc-position="bottom"><img alt="Pipeline" src="../imgs/main/pipeline.png" width="100%"></a>
+  </p>
+<figcaption>The complete SpaRRTa data generation and evaluation pipeline.</figcaption>
+</figure>
+<h3 id="pipeline-steps">Pipeline Steps<a class="headerlink" href="#pipeline-steps" title="Permanent link">¶</a></h3>
+<pre class="mermaid"><code>flowchart LR
+    A[Set Stage] --&gt; B[Set Camera]
+    B --&gt; C[Render View]
+    C --&gt; D[Get Ground Truth]
+    D --&gt; E[Run Model]
+    E --&gt; F[Calculate Results]
+
+    style A fill:#7c4dff,color:#fff
+    style B fill:#7c4dff,color:#fff
+    style C fill:#536dfe,color:#fff
+    style D fill:#536dfe,color:#fff
+    style E fill:#3f1dcb,color:#fff
+    style F fill:#3f1dcb,color:#fff</code></pre>
+<h4 id="1-set-stage">1. Set Stage<a class="headerlink" href="#1-set-stage" title="Permanent link">¶</a></h4>
+<p>The evaluator establishes the scene configuration:</p>
+<ul>
+<li>Select environment (Forest, Desert, Winter Town, Bridge, City)</li>
+<li>Choose source, target, and viewpoint objects from the asset library</li>
+<li>Randomly sample object positions from a Gaussian distribution</li>
+<li>Apply physics-aware terrain adaptation via raycasting</li>
+</ul>
+<h4 id="2-set-camera">2. Set Camera<a class="headerlink" href="#2-set-camera" title="Permanent link">¶</a></h4>
+<p>Configure the viewpoint for image capture:</p>
+<ul>
+<li>Sample camera position within a defined area surrounding scene center</li>
+<li>Orient camera toward placed objects</li>
+<li>Validate visibility constraints (objects within field of view)</li>
+<li>Ensure proper scene composition (no extreme clustering or distance)</li>
+</ul>
+<h4 id="3-render-view">3. Render View<a class="headerlink" href="#3-render-view" title="Permanent link">¶</a></h4>
+<p>Generate high-fidelity imagery using Unreal Engine 5:</p>
+<ul>
+<li>Ray-traced RGB image with dynamic global illumination</li>
+<li>Ground-truth segmentation masks for validation</li>
+<li>Resolution: 2048x2048 - Later, it is downsampled to 224×224 (standard VFM input size)</li>
+</ul>
+<h4 id="4-get-ground-truth">4. Get Ground Truth<a class="headerlink" href="#4-get-ground-truth" title="Permanent link">¶</a></h4>
+<p>Extract spatial relation labels:</p>
+<ul>
+<li>Calculate angular relationship between source and target objects</li>
+<li>Apply viewpoint transformation (camera for ego, human for allo)</li>
+<li>Filter ambiguous configurations (objects near decision boundaries)</li>
+<li>Assign discrete label: <strong>Front</strong>, <strong>Back</strong>, <strong>Left</strong>, or <strong>Right</strong></li>
+</ul>
+<h2 id="geometric-ambiguity-control">Geometric Ambiguity Control<a class="headerlink" href="#geometric-ambiguity-control" title="Permanent link">¶</a></h2>
+<p>A key challenge in spatial classification is defining precise boundaries between classes. SpaRRTa implements strict <strong>rejection sampling</strong> to eliminate label noise:</p>
+<figure>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../imgs/scene_plots/legend/sparrta_legend.png" data-desc-position="bottom"><img alt="Scene Examples" src="../imgs/scene_plots/legend/sparrta_legend.png"></a>
+  <a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../imgs/scene_plots/sparrta_environment_viz_0003.png" data-desc-position="bottom"><img alt="Scene Examples" src="../imgs/scene_plots/sparrta_environment_viz_0003.png"></a>
+  </p>
+<figcaption>Visualization of valid placement zones and ambiguity exclusion zones (red/gray). Gray zones are the ambiguity exclusion zone for Camera Viewpoint. Red zones are the ambiguity exclusion zone for Human Viewpoint.</figcaption>
+</figure>
+<h3 id="exclusion-zones">Exclusion Zones<a class="headerlink" href="#exclusion-zones" title="Permanent link">¶</a></h3>
+<p>Ambiguity zones are defined as conical regions centered along the diagonals:</p>
+<ul>
+<li><strong>45°, 135°, 225°, 315°</strong> relative to the viewpoint's forward vector</li>
+<li>Any sample where the target falls within these zones is <strong>automatically rejected</strong></li>
+<li>This guarantees unambiguous ground-truth labels</li>
+</ul>
+<div class="admonition info">
+<p class="admonition-title">Rejection Sampling</p>
+<p>The pipeline automatically discards configurations where the target object lies within ±15° of a diagonal boundary, ensuring all retained samples have mathematically precise labels.</p>
+</div>
+<h2 id="technical-implementation">Technical Implementation<a class="headerlink" href="#technical-implementation" title="Permanent link">¶</a></h2>
+<h3 id="rendering-stack">Rendering Stack<a class="headerlink" href="#rendering-stack" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Engine</strong></td>
+<td>Unreal Engine 5.5</td>
+</tr>
+<tr>
+<td><strong>Lighting</strong></td>
+<td>Lumen (dynamic global illumination)</td>
+</tr>
+<tr>
+<td><strong>Geometry</strong></td>
+<td>Nanite (virtualized geometry)</td>
+</tr>
+<tr>
+<td><strong>API</strong></td>
+<td>Python Editor API + UnrealCV</td>
+</tr>
+<tr>
+<td><strong>Hardware</strong></td>
+<td>2× NVIDIA RTX 2080 Ti (11GB VRAM)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="camera-configuration">Camera Configuration<a class="headerlink" href="#camera-configuration" title="Permanent link">¶</a></h3>
+<p>The camera system uses Unreal Engine's <code>CineCameraActor</code> with standardized settings:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_camera</span><span class="p">():</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="sd">"""</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="sd">    Initialize CineCameraActor with standardized parameters.</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="sd">    """</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="c1"># Filmback settings (sensor dimensions)</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">sensor_width</span> <span class="o">=</span> <span class="mf">50.0</span>   <span class="c1"># mm</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">sensor_height</span> <span class="o">=</span> <span class="mf">50.0</span>  <span class="c1"># mm</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="c1"># Lens settings</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">focal_length</span> <span class="o">=</span> <span class="mf">50.0</span>   <span class="c1"># mm</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">aperture</span> <span class="o">=</span> <span class="mf">10.0</span>      <span class="c1"># f-stop</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="c1"># Calculate FOV from sensor and focal length</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">horizontal_fov</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">arctan</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">sensor_width</span> <span class="o">/</span> <span class="n">focal_length</span><span class="p">)</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">vertical_fov</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">arctan</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">sensor_height</span> <span class="o">/</span> <span class="n">focal_length</span><span class="p">)</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="c1"># Result: ~53° horizontal FOV</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">fov</span> <span class="o">=</span> <span class="p">(</span><span class="n">horizontal_fov</span><span class="p">,</span> <span class="n">vertical_fov</span><span class="p">)</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="c1"># Create camera with these settings</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="n">camera</span> <span class="o">=</span> <span class="n">CineCameraActor</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">rotation</span><span class="p">)</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="n">camera</span><span class="o">.</span><span class="n">set_filmback</span><span class="p">(</span><span class="n">sensor_width</span><span class="p">,</span> <span class="n">sensor_height</span><span class="p">)</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="n">camera</span><span class="o">.</span><span class="n">set_focal_length</span><span class="p">(</span><span class="n">focal_length</span><span class="p">)</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="n">camera</span><span class="o">.</span><span class="n">set_aperture</span><span class="p">(</span><span class="n">aperture</span><span class="p">)</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    <span class="k">return</span> <span class="n">camera</span>
+</span></code></pre></div>
+<h3 id="object-placement-algorithm">Object Placement Algorithm<a class="headerlink" href="#object-placement-algorithm" title="Permanent link">¶</a></h3>
+<p>Objects are placed using an iterative rejection sampling approach with physics-aware terrain adaptation:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">place_objects</span><span class="p">(</span><span class="n">environment</span><span class="p">,</span> <span class="n">objects</span><span class="p">,</span> <span class="n">max_attempts</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="sd">"""</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="sd">    Place objects with physics-aware terrain adaptation.</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="sd">    Uses iterative rejection sampling to ensure valid configurations.</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="sd">    """</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="c1"># Sample center point for object cluster</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">center_x</span> <span class="o">=</span> <span class="n">sample_gaussian</span><span class="p">(</span><span class="n">environment_center_x</span><span class="p">,</span> <span class="n">sample_radius</span><span class="p">)</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">center_y</span> <span class="o">=</span> <span class="n">sample_gaussian</span><span class="p">(</span><span class="n">environment_center_y</span><span class="p">,</span> <span class="n">sample_radius</span><span class="p">)</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="n">center_z</span> <span class="o">=</span> <span class="n">environment_base_z</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="k">for</span> <span class="n">attempt</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_attempts</span><span class="p">):</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>        <span class="n">valid_placement</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>            <span class="c1"># Sample random rotation</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>            <span class="n">rotation</span> <span class="o">=</span> <span class="n">random_rotation</span><span class="p">(</span><span class="n">yaw_range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">360</span><span class="p">))</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>            <span class="c1"># Sample X, Y positions around center using Gaussian distribution</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>            <span class="n">obj_x</span> <span class="o">=</span> <span class="n">random_gaussian</span><span class="p">(</span><span class="n">center_x</span><span class="p">,</span> <span class="n">object_proximity_std</span><span class="p">)</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>            <span class="n">obj_y</span> <span class="o">=</span> <span class="n">random_gaussian</span><span class="p">(</span><span class="n">center_y</span><span class="p">,</span> <span class="n">object_proximity_std</span><span class="p">)</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>            <span class="c1"># Perform line trace to find ground height at (X, Y)</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>            <span class="n">ground_z</span> <span class="o">=</span> <span class="n">detect_ground_at_position</span><span class="p">(</span><span class="n">obj_x</span><span class="p">,</span> <span class="n">obj_y</span><span class="p">,</span> <span class="n">center_z</span><span class="p">)</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>            <span class="c1"># Calculate proper Z position accounting for object bounds</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>            <span class="c1"># Get how much object extends below its origin</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>            <span class="n">object_ground_offset</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">get_ground_offset</span><span class="p">()</span>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>            <span class="c1"># Place object so bottom surface touches ground</span>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>            <span class="n">spawn_z</span> <span class="o">=</span> <span class="n">ground_z</span> <span class="o">-</span> <span class="n">object_ground_offset</span> <span class="o">+</span> <span class="n">safety_margin</span>
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>            <span class="n">position</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span><span class="n">obj_x</span><span class="p">,</span> <span class="n">obj_y</span><span class="p">,</span> <span class="n">spawn_z</span><span class="p">)</span>
+</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>            <span class="n">obj</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">rotation</span><span class="p">)</span>
+</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>
+</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>        <span class="c1"># Validate configuration</span>
+</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">objects</span><span class="p">)):</span>
+</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">objects</span><span class="p">)):</span>
+</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>                <span class="c1"># Check for AABB overlap (collision detection)</span>
+</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>                <span class="k">if</span> <span class="n">objects</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">overlaps</span><span class="p">(</span><span class="n">objects</span><span class="p">[</span><span class="n">j</span><span class="p">]):</span>
+</span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>                    <span class="n">valid_placement</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>                    <span class="k">break</span>
+</span><span id="__span-1-42"><a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>
+</span><span id="__span-1-43"><a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>                <span class="c1"># Check objects are not too far apart</span>
+</span><span id="__span-1-44"><a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>                <span class="k">if</span> <span class="n">objects</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">distance_to</span><span class="p">(</span><span class="n">objects</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">&gt;</span> <span class="n">max_distance</span><span class="p">:</span>
+</span><span id="__span-1-45"><a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>                    <span class="n">valid_placement</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="__span-1-46"><a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>                    <span class="k">break</span>
+</span><span id="__span-1-47"><a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>
+</span><span id="__span-1-48"><a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>            <span class="k">if</span> <span class="ow">not</span> <span class="n">valid_placement</span><span class="p">:</span>
+</span><span id="__span-1-49"><a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>                <span class="k">break</span>
+</span><span id="__span-1-50"><a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>
+</span><span id="__span-1-51"><a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>        <span class="k">if</span> <span class="n">valid_placement</span><span class="p">:</span>
+</span><span id="__span-1-52"><a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>            <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="p">(</span><span class="n">center_x</span><span class="p">,</span> <span class="n">center_y</span><span class="p">)</span>
+</span><span id="__span-1-53"><a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>
+</span><span id="__span-1-54"><a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>    <span class="c1"># All attempts failed</span>
+</span><span id="__span-1-55"><a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>    <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">(</span><span class="n">center_x</span><span class="p">,</span> <span class="n">center_y</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="camera-sampling-with-screenshot">Camera Sampling with Screenshot<a class="headerlink" href="#camera-sampling-with-screenshot" title="Permanent link">¶</a></h3>
+<p>Camera positioning uses iterative sampling to ensure all objects are properly framed:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">sample_camera</span><span class="p">(</span><span class="n">camera</span><span class="p">,</span> <span class="n">objects</span><span class="p">,</span> <span class="n">object_center</span><span class="p">,</span> <span class="n">max_attempts</span><span class="o">=</span><span class="mi">15</span><span class="p">):</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="sd">"""</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="sd">    Sample camera position and orientation with validation.</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="sd">    Ensures all objects are visible and properly framed.</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="sd">    """</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">center_x</span><span class="p">,</span> <span class="n">center_y</span> <span class="o">=</span> <span class="n">object_center</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="c1"># Calculate average Z position of all objects</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">avg_object_z</span> <span class="o">=</span> <span class="n">mean</span><span class="p">([</span><span class="n">obj</span><span class="o">.</span><span class="n">get_location</span><span class="p">()</span><span class="o">.</span><span class="n">z</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">])</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="k">for</span> <span class="n">attempt</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_attempts</span><span class="p">):</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>        <span class="c1"># Sample camera position around object cluster</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>        <span class="n">camera_x</span> <span class="o">=</span> <span class="n">random_uniform</span><span class="p">(</span><span class="n">center_x</span> <span class="o">-</span> <span class="n">camera_range</span><span class="p">,</span> <span class="n">center_x</span> <span class="o">+</span> <span class="n">camera_range</span><span class="p">)</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>        <span class="n">camera_y</span> <span class="o">=</span> <span class="n">random_uniform</span><span class="p">(</span><span class="n">center_y</span> <span class="o">-</span> <span class="n">camera_range</span><span class="p">,</span> <span class="n">center_y</span> <span class="o">+</span> <span class="n">camera_range</span><span class="p">)</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>        <span class="n">camera_z</span> <span class="o">=</span> <span class="n">random_uniform</span><span class="p">(</span><span class="n">avg_object_z</span><span class="p">,</span> <span class="n">avg_object_z</span> <span class="o">+</span> <span class="n">camera_height_range</span><span class="p">)</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>        <span class="n">camera_position</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span><span class="n">camera_x</span><span class="p">,</span> <span class="n">camera_y</span><span class="p">,</span> <span class="n">camera_z</span><span class="p">)</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>        <span class="n">camera</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="n">camera_position</span><span class="p">)</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>        <span class="c1"># Orient camera to look at centroid of all objects</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>        <span class="n">object_centroid</span> <span class="o">=</span> <span class="n">calculate_centroid</span><span class="p">([</span><span class="n">obj</span><span class="o">.</span><span class="n">get_location</span><span class="p">()</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">])</span>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>        <span class="n">camera</span><span class="o">.</span><span class="n">look_at_many</span><span class="p">(</span><span class="n">objects</span><span class="p">)</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>        <span class="c1"># Validate all objects are within camera FOV</span>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>        <span class="n">object_angles</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
+</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>            <span class="c1"># Calculate angle between camera forward vector and object</span>
+</span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>            <span class="n">angle</span> <span class="o">=</span> <span class="n">camera</span><span class="o">.</span><span class="n">angle_to</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+</span><span id="__span-2-29"><a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>            <span class="n">object_angles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+</span><span id="__span-2-30"><a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>
+</span><span id="__span-2-31"><a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>        <span class="n">max_angle</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">object_angles</span><span class="p">)</span>
+</span><span id="__span-2-32"><a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>        <span class="n">min_angle</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">object_angles</span><span class="p">)</span>
+</span><span id="__span-2-33"><a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>
+</span><span id="__span-2-34"><a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>        <span class="c1"># Check objects are within FOV bounds</span>
+</span><span id="__span-2-35"><a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>        <span class="c1"># Reject if any object is too far from center (outside FOV)</span>
+</span><span id="__span-2-36"><a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>        <span class="k">if</span> <span class="n">max_angle</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">camera</span><span class="o">.</span><span class="n">fov</span> <span class="o">-</span> <span class="n">margin</span><span class="p">):</span>
+</span><span id="__span-2-37"><a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>            <span class="k">continue</span>  <span class="c1"># Reject and resample</span>
+</span><span id="__span-2-38"><a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>
+</span><span id="__span-2-39"><a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>        <span class="c1"># Reject if all objects are too close to center (too clustered)</span>
+</span><span id="__span-2-40"><a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>        <span class="k">if</span> <span class="n">max_angle</span> <span class="o">&lt;</span> <span class="n">min_angle_threshold</span><span class="p">:</span>
+</span><span id="__span-2-41"><a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>            <span class="k">continue</span>  <span class="c1"># Reject and resample</span>
+</span><span id="__span-2-42"><a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>
+</span><span id="__span-2-43"><a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>        <span class="c1"># Valid camera configuration found</span>
+</span><span id="__span-2-44"><a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>        <span class="k">return</span> <span class="kc">True</span>
+</span><span id="__span-2-45"><a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a>
+</span><span id="__span-2-46"><a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a>    <span class="c1"># All attempts failed</span>
+</span><span id="__span-2-47"><a id="__codelineno-2-47" name="__codelineno-2-47" href="#__codelineno-2-47"></a>    <span class="k">return</span> <span class="kc">False</span>
+</span></code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Iterative Rejection Sampling</p>
+<p>The pipeline uses iterative rejection sampling with configurable maximum attempts:</p>
+<ul>
+<li><strong>Object placement</strong>: Up to X attempts to find valid non-overlapping configurations</li>
+<li><strong>Camera sampling</strong>: Up to Y attempts to find valid camera positions with all objects in frame</li>
+<li>Failed attempts are automatically discarded and resampled</li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Parameter Serialization</p>
+<p>For each successfully generated scene, the pipeline serializes:</p>
+<ul>
+<li>Camera intrinsics (sensor dimensions, focal length, FOV, aperture)</li>
+<li>Camera extrinsics (position, rotation)</li>
+<li>Object positions and rotations</li>
+<li>All metadata saved to JSON files for reproducibility</li>
+</ul>
+</div>
+<h2 id="dataset-statistics">Dataset Statistics<a class="headerlink" href="#dataset-statistics" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Ego Images</th>
+<th>Allo Images</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Forest</td>
+<td>5,000</td>
+<td>10,000</td>
+</tr>
+<tr>
+<td>Desert</td>
+<td>5,000</td>
+<td>10,000</td>
+</tr>
+<tr>
+<td>Winter Town</td>
+<td>5,000</td>
+<td>10,000</td>
+</tr>
+<tr>
+<td>Bridge</td>
+<td>5,000</td>
+<td>10,000</td>
+</tr>
+<tr>
+<td>City</td>
+<td>5,000</td>
+<td>10,000</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>25,000</strong></td>
+<td><strong>50,000</strong></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Dataset Size Rationale</p>
+<ul>
+<li><strong>Egocentric</strong>: 5,000 images sufficient for generalization</li>
+<li><strong>Allocentric</strong>: 10,000 images needed due to increased task complexity (perspective transformation learning)</li>
+</ul>
+</div>
+<h2 id="scene-visualizations">Scene Visualizations<a class="headerlink" href="#scene-visualizations" title="Permanent link">¶</a></h2>
+<p>Explore interactive visualizations of generated scenes showing photorealistic renderings alongside their 3D spatial annotations and 2D top-down views.</p>
+<div class="scene-viz-container">
+  <div class="scene-viz-slider-wrapper">
+    <div class="scene-viz-legend">
+      <a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../imgs/scene_plots/legend/sparrta_legend.png" data-desc-position="bottom"><img src="../imgs/scene_plots/legend/sparrta_legend.png" alt="SpaRRTa Legend" class="legend-image"></a>
+    </div>
+
+    <div class="scene-viz-image-container">
+      <a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../imgs/scene_plots/sparrta_environment_viz_0000.png" data-desc-position="bottom"><img id="scene-viz-image" src="../imgs/scene_plots/sparrta_environment_viz_0000.png" alt="Scene Visualization" class="scene-viz-image"></a>
+    </div>
+
+    <div class="scene-viz-controls">
+      <button class="scene-viz-btn scene-viz-btn-prev" aria-label="Previous image">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 18l-6-6 6-6"></path>
+        </svg>
+      </button>
+      <div class="scene-viz-counter">
+        <span class="scene-viz-current">1</span> / <span class="scene-viz-total">60</span>
+      </div>
+      <button class="scene-viz-btn scene-viz-btn-next" aria-label="Next image">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 18l6-6-6-6"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="scene-viz-slider">
+      <div class="scene-viz-track">
+        <div class="scene-viz-fill"></div>
+        <div class="scene-viz-thumb" id="scene-viz-thumb"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3 id="environment-asset-relations">Environment-Asset Relations<a class="headerlink" href="#environment-asset-relations" title="Permanent link">¶</a></h3>
+<p>Each environment contains <strong>3 unique object triples</strong> used for evaluation. The table below shows the complete mapping of environments to their source objects, target objects, and viewpoint configurations:</p>
+<table class="env-table">
+  <thead>
+    <tr>
+      <th>Triple ID</th>
+      <th>Source Object</th>
+      <th>Target Object</th>
+      <th>Viewpoint</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="env-bridge">
+      <td><strong>Bridge-1</strong></td>
+      <td>Truck</td>
+      <td>Tree</td>
+      <td>Camera / Human 1</td>
+    </tr>
+    <tr class="env-bridge">
+      <td><strong>Bridge-2</strong></td>
+      <td>Bike</td>
+      <td>Trash Bin</td>
+      <td>Camera / Human 2</td>
+    </tr>
+    <tr class="env-bridge">
+      <td><strong>Bridge-3</strong></td>
+      <td>Vespa</td>
+      <td>Trash Bin</td>
+      <td>Camera / Human 3</td>
+    </tr>
+    <tr class="env-city">
+      <td><strong>City-1</strong></td>
+      <td>Vespa</td>
+      <td>Cone</td>
+      <td>Camera / Human 1</td>
+    </tr>
+    <tr class="env-city">
+      <td><strong>City-2</strong></td>
+      <td>Taxi</td>
+      <td>Fire Hydrant</td>
+      <td>Camera / Human 2</td>
+    </tr>
+    <tr class="env-city">
+      <td><strong>City-3</strong></td>
+      <td>Bike</td>
+      <td>Cone</td>
+      <td>Camera / Human 3</td>
+    </tr>
+    <tr class="env-desert">
+      <td><strong>Desert-1</strong></td>
+      <td>Truck</td>
+      <td>Rock</td>
+      <td>Camera / Human 1</td>
+    </tr>
+    <tr class="env-desert">
+      <td><strong>Desert-2</strong></td>
+      <td>Camel</td>
+      <td>Cactus</td>
+      <td>Camera / Human 2</td>
+    </tr>
+    <tr class="env-desert">
+      <td><strong>Desert-3</strong></td>
+      <td>Camel</td>
+      <td>Barrel</td>
+      <td>Camera / Human 3</td>
+    </tr>
+    <tr class="env-forest">
+      <td><strong>Forest-1</strong></td>
+      <td>Tree</td>
+      <td>Rock</td>
+      <td>Camera / Human 1</td>
+    </tr>
+    <tr class="env-forest">
+      <td><strong>Forest-2</strong></td>
+      <td>Bear</td>
+      <td>Tent</td>
+      <td>Camera / Human 2</td>
+    </tr>
+    <tr class="env-forest">
+      <td><strong>Forest-3</strong></td>
+      <td>Fox</td>
+      <td>Rock</td>
+      <td>Camera / Human 3</td>
+    </tr>
+    <tr class="env-winter">
+      <td><strong>Winter-1</strong></td>
+      <td>Truck</td>
+      <td>Tree</td>
+      <td>Camera / Human 1</td>
+    </tr>
+    <tr class="env-winter">
+      <td><strong>Winter-2</strong></td>
+      <td>Husky</td>
+      <td>Snowman</td>
+      <td>Camera / Human 2</td>
+    </tr>
+    <tr class="env-winter">
+      <td><strong>Winter-3</strong></td>
+      <td>Deer</td>
+      <td>Tree</td>
+      <td>Camera / Human 3</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="admonition info">
+<p class="admonition-title">Viewpoint Configuration</p>
+<ul>
+<li><strong>Camera</strong>: Used for egocentric (SpaRRTa-ego) task evaluation</li>
+<li><strong>Human 1 / 2 / 3</strong>: Different human models used for allocentric (SpaRRTa-allo) task evaluation, each with unique poses and positions</li>
+</ul>
+</div>
+<hr>
+<div style="text-align: center; margin-top: 2rem;">
+  <a href="../evaluation-vfms/" class="md-button md-button--primary">Next: Evaluation of VFMs →</a>
+</div>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer">
+        
+          
+          <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: Home">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Home
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../evaluation-vfms/" class="md-footer__link md-footer__link--next" aria-label="Next: Evaluation of VFMs">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Evaluation of VFMs
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright © 2026 SpaRRTa Authors
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/gmum/SpaRRTa" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="mailto:turhancan.kargin@doctoral.uj.edu.pl" target="_blank" rel="noopener" title="" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M536.4-26.3c9.8-3.5 20.6-1 28 6.3s9.8 18.2 6.3 28l-178 496.9c-5 13.9-18.1 23.1-32.8 23.1-14.2 0-27-8.6-32.3-21.7l-64.2-158c-4.5-11-2.5-23.6 5.2-32.6l94.5-112.4c5.1-6.1 4.7-15-.9-20.6s-14.6-6-20.6-.9l-112.4 94.3c-9.1 7.6-21.6 9.6-32.6 5.2L38.1 216.8c-13.1-5.3-21.7-18.1-21.7-32.3 0-14.7 9.2-27.8 23.1-32.8z"></path></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.path", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link", "announce.dismiss"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../javascripts/extra.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

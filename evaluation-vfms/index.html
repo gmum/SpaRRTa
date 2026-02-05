@@ -1,0 +1,2094 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Methodology for evaluating Visual Foundation Models on spatial reasoning tasks">
+      
+      
+        <meta name="author" content="Turhan Can Kargin et al.">
+      
+      
+        <link rel="canonical" href="https://gmum.github.io/SpaRRTa/evaluation-vfms/">
+      
+      
+        <link rel="prev" href="../unreal-scene-generation/">
+      
+      
+        <link rel="next" href="../results/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../imgs/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Evaluation of VFMs - SpaRRTa</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-S4G8M79T0F"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-S4G8M79T0F",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-S4G8M79T0F",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#evaluation-of-visual-foundation-models" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+              </button>
+            
+            
+  <div class="announcement-content">
+    🎉 <strong>Paper submitted!</strong> SpaRRTa benchmark for evaluating spatial intelligence in VFMs.
+    <a href="https://arxiv.org/abs/2601.11729" target="_blank">Read the paper →</a>
+  </div>
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="SpaRRTa" class="md-header__button md-logo" aria-label="SpaRRTa" data-md-component="logo">
+      
+  <img src="../imgs/favicon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SpaRRTa
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Evaluation of VFMs
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"></path></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/gmum/SpaRRTa" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    gmum/SpaRRTa
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../unreal-scene-generation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Unreal Scene Generation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Evaluation of VFMs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../results/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  More Results
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../user-guide/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  User Guide
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../examples/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Examples
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../blog/" class="md-tabs__link">
+          
+  
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="SpaRRTa" class="md-nav__button md-logo" aria-label="SpaRRTa" data-md-component="logo">
+      
+  <img src="../imgs/favicon.png" alt="logo">
+
+    </a>
+    SpaRRTa
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/gmum/SpaRRTa" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    gmum/SpaRRTa
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../unreal-scene-generation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unreal Scene Generation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation of VFMs
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation of VFMs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-spatial-relation-recognition-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Spatial Relation Recognition Task
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Spatial Relation Recognition Task">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task Variants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#classification-labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Classification Labels
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evaluated-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluated Models
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Evaluated Models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#joint-embedding-architectures-jea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Joint-Embedding Architectures (JEA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#masked-image-modeling-mim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Masked Image Modeling (MIM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#supervised-weakly-supervised" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supervised &amp; Weakly Supervised
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interactive-prediction-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactive Prediction Demo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#probing-methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Probing Methodology
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Probing Methodology">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#probing-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Probing Strategies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hyperparameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hyperparameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evaluation-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluation Protocol
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Evaluation Protocol">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-splits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Splits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reproducibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reproducibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Insights
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Insights">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#performance-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-rankings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Rankings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-difficulty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task Difficulty
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../results/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    More Results
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8">
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blog
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Blog
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8_2">
+        
+          
+          <label class="md-nav__link" for="__nav_8_2" id="__nav_8_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Archive
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Archive
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/archive/2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2025
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8_3">
+        
+          
+          <label class="md-nav__link" for="__nav_8_3" id="__nav_8_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Categories
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Categories
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../blog/category/announcements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Announcements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-spatial-relation-recognition-task" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Spatial Relation Recognition Task
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Spatial Relation Recognition Task">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task Variants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#classification-labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Classification Labels
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evaluated-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluated Models
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Evaluated Models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#joint-embedding-architectures-jea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Joint-Embedding Architectures (JEA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#masked-image-modeling-mim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Masked Image Modeling (MIM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#supervised-weakly-supervised" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supervised &amp; Weakly Supervised
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interactive-prediction-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interactive Prediction Demo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#probing-methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Probing Methodology
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Probing Methodology">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#probing-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Probing Strategies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hyperparameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hyperparameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evaluation-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluation Protocol
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Evaluation Protocol">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-splits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Splits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reproducibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reproducibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Insights
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Insights">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#performance-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-rankings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Rankings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-difficulty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task Difficulty
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="evaluation-of-visual-foundation-models">Evaluation of Visual Foundation Models<a class="headerlink" href="#evaluation-of-visual-foundation-models" title="Permanent link">¶</a></h1>
+<p>SpaRRTa provides a systematic methodology for evaluating how Visual Foundation Models (VFMs) encode and represent spatial relations between objects.</p>
+<h2 id="the-spatial-relation-recognition-task">The Spatial Relation Recognition Task<a class="headerlink" href="#the-spatial-relation-recognition-task" title="Permanent link">¶</a></h2>
+<p>The core task is to determine the <strong>relative spatial relation</strong> between two objects in an image:</p>
+<ul>
+<li><strong>Source Object</strong>: The reference point for the spatial relation</li>
+<li><strong>Target Object</strong>: The object whose position is being queried</li>
+<li><strong>Viewpoint</strong>: The perspective from which the relation is evaluated</li>
+</ul>
+<div class="comparison-container">
+  <div class="comparison-panel" style="padding: 0;">
+    <a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../imgs/main/ego2.png" data-desc-position="bottom"><img src="../imgs/main/ego2.png" alt="Egocentric task" style="width: 100%; height: 100%; border-radius: 1.0rem;"></a>
+  </div>
+  <div class="comparison-panel" style="padding: 0;">
+    <a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../imgs/main/allo2.png" data-desc-position="bottom"><img src="../imgs/main/allo2.png" alt="Allocentric task" style="width: 100%; height: 100%; border-radius: 1.0rem;"></a>
+  </div>
+</div>
+<p style="text-align: center; color: var(--sparrta-text-secondary); margin-top: 0.5rem;"><strong>Left:</strong> Egocentric task (camera viewpoint). <strong>Right:</strong> Allocentric task (human viewpoint).</p>
+
+<h3 id="task-variants">Task Variants<a class="headerlink" href="#task-variants" title="Permanent link">¶</a></h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio"><input id="__tabbed_1_2" name="__tabbed_1" type="radio"><div class="tabbed-labels"><label for="__tabbed_1_1">Egocentric (SpaRRTa-ego)</label><label for="__tabbed_1_2">Allocentric (SpaRRTa-allo)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>The <strong>camera</strong> defines the viewpoint for spatial relations.</p>
+<div class="admonition example">
+<p class="admonition-title">Example Query</p>
+<p>"Where is the <strong>tree</strong> (target) relative to the <strong>car</strong> (source) from the <strong>camera's</strong> perspective?"</p>
+</div>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>Directly observable from input image</li>
+<li>Simpler—no perspective transformation needed</li>
+<li>Tests basic spatial layout understanding</li>
+</ul>
+<p><strong>Answer</strong>: The relation as seen from the camera (Front/Back/Left/Right)</p>
+</div>
+<div class="tabbed-block">
+<p>A <strong>third object</strong> (human) defines the viewpoint for spatial relations.</p>
+<div class="admonition example">
+<p class="admonition-title">Example Query</p>
+<p>"Where is the <strong>tree</strong> (target) relative to the <strong>car</strong> (source) from the <strong>human's</strong> perspective?"</p>
+</div>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>Requires implicit perspective transformation</li>
+<li>More challenging—must reason from another viewpoint</li>
+<li>Tests abstract spatial reasoning capability</li>
+</ul>
+<p><strong>Answer</strong>: The relation as would be seen from the human's position</p>
+</div>
+</div>
+</div>
+<h3 id="classification-labels">Classification Labels<a class="headerlink" href="#classification-labels" title="Permanent link">¶</a></h3>
+<p>The task is formulated as a <strong>4-way classification</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Front</strong></td>
+<td>Target is in front of source (from viewpoint)</td>
+</tr>
+<tr>
+<td><strong>Back</strong></td>
+<td>Target is behind source (from viewpoint)</td>
+</tr>
+<tr>
+<td><strong>Left</strong></td>
+<td>Target is to the left of source (from viewpoint)</td>
+</tr>
+<tr>
+<td><strong>Right</strong></td>
+<td>Target is to the right of source (from viewpoint)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="evaluated-models">Evaluated Models<a class="headerlink" href="#evaluated-models" title="Permanent link">¶</a></h2>
+<p>We evaluate a diverse suite of VFMs spanning different learning paradigms:</p>
+<h3 id="joint-embedding-architectures-jea">Joint-Embedding Architectures (JEA)<a class="headerlink" href="#joint-embedding-architectures-jea" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Backbone</th>
+<th>Pre-training</th>
+<th>Dataset</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>DINO</strong></td>
+<td>ViT-B/16</td>
+<td>Contrastive / Distillation</td>
+<td>ImageNet-1k</td>
+</tr>
+<tr>
+<td><strong>DINO-v2</strong></td>
+<td>ViT-B/14</td>
+<td>DINO + iBOT</td>
+<td>LVD-142M</td>
+</tr>
+<tr>
+<td><strong>DINO-v2 (+reg)</strong></td>
+<td>ViT-B/14, ViT-L/14</td>
+<td>DINO-v2 w/ Register Tokens</td>
+<td>LVD-142M</td>
+</tr>
+<tr>
+<td><strong>DINOv3</strong></td>
+<td>ViT-B/16</td>
+<td>DINO + iBOT</td>
+<td>LVD-1689M</td>
+</tr>
+</tbody>
+</table>
+<h3 id="masked-image-modeling-mim">Masked Image Modeling (MIM)<a class="headerlink" href="#masked-image-modeling-mim" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Backbone</th>
+<th>Pre-training</th>
+<th>Dataset</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>MAE</strong></td>
+<td>ViT-B/16</td>
+<td>Pixel Reconstruction</td>
+<td>ImageNet-1k</td>
+</tr>
+<tr>
+<td><strong>MaskFeat</strong></td>
+<td>ViT-B/16</td>
+<td>HOG Feature Prediction</td>
+<td>ImageNet-1k</td>
+</tr>
+<tr>
+<td><strong>SPA</strong></td>
+<td>ViT-B/16</td>
+<td>Masked Volumetric Neural Rendering</td>
+<td>ScanNet, Hypersim, S3DIS</td>
+</tr>
+<tr>
+<td><strong>CroCo</strong></td>
+<td>ViT-B/16</td>
+<td>Cross-View Completion</td>
+<td>Habitat</td>
+</tr>
+<tr>
+<td><strong>CroCov2</strong></td>
+<td>ViT-B/16</td>
+<td>Cross-View Completion</td>
+<td>ARKitScenes, MegaDepth, ...</td>
+</tr>
+</tbody>
+</table>
+<h3 id="supervised-weakly-supervised">Supervised &amp; Weakly Supervised<a class="headerlink" href="#supervised-weakly-supervised" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Backbone</th>
+<th>Pre-training</th>
+<th>Dataset</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>VGGT</strong></td>
+<td>ViT-L/14</td>
+<td>Multi-Task 3D Regression</td>
+<td>Co3D, MegaDepth, etc.</td>
+</tr>
+<tr>
+<td><strong>DeiT</strong></td>
+<td>ViT-B/16</td>
+<td>Classification + Distillation</td>
+<td>ImageNet-1k</td>
+</tr>
+<tr>
+<td><strong>CLIP</strong></td>
+<td>ViT-B/16</td>
+<td>Image-Text Contrastive</td>
+<td>Web Image-Text (WIT)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="interactive-prediction-demo">Interactive Prediction Demo<a class="headerlink" href="#interactive-prediction-demo" title="Permanent link">¶</a></h2>
+<p>Explore spatial relation predictions from the <strong>VGGT</strong> model using our interactive demo. Efficient Probing is used for prediction. Attention maps of efficient probing heads are visualized to show which regions of the image the model is paying attention to. Select an environment and viewpoint to see how the model predicts spatial relations between objects.</p>
+<div class="prediction-demo-container">
+  <div class="prediction-demo-controls">
+    <div class="prediction-demo-select-group">
+      <label for="prediction-env-select">Environment:</label>
+      <select id="prediction-env-select" class="prediction-demo-select">
+        <option value="Bridge">Bridge</option>
+        <option value="Forest">Forest</option>
+        <option value="City">City</option>
+        <option value="Desert">Desert</option>
+        <option value="Winter_Town">Winter Town</option>
+      </select>
+    </div>
+
+    <div class="prediction-demo-select-group">
+      <label for="prediction-viewpoint-select">Viewpoint:</label>
+      <select id="prediction-viewpoint-select" class="prediction-demo-select">
+        <option value="camera">Camera (Egocentric)</option>
+        <option value="human">Human (Allocentric)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="prediction-demo-images" id="prediction-images-container">
+    <div class="prediction-image-wrapper">
+      <div class="prediction-image-label">Original Image</div>
+      <div class="prediction-image-container" id="prediction-original-container">
+        <a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../imgs/predictions/Bridge/original.jpg" data-desc-position="bottom"><img id="prediction-original-img" src="../imgs/predictions/Bridge/original.jpg" alt="Original Scene" class="prediction-image"></a>
+        <div class="prediction-tooltip" id="prediction-tooltip"></div>
+      </div>
+    </div>
+
+    <div class="prediction-image-wrapper prediction-prediction-wrapper" id="prediction-prediction-wrapper" style="display: none;">
+      <div class="prediction-image-label">VGGT Prediction</div>
+      <div class="prediction-image-container" id="prediction-prediction-container">
+        <a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="" data-desc-position="bottom"><img id="prediction-prediction-img" src="" alt="Prediction" class="prediction-image"></a>
+        <div class="prediction-tooltip" id="prediction-tooltip-pred"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prediction-demo-button-wrapper">
+    <button id="prediction-predict-btn" class="prediction-demo-btn">
+      <span class="btn-icon">🔮</span>
+      Predict
+    </button>
+  </div>
+
+  <div class="prediction-demo-info" id="prediction-info">
+    <p><strong>Reference Object:</strong> <span id="prediction-reference">Tree</span></p>
+    <p><strong>Target Object:</strong> <span id="prediction-target">Car</span></p>
+    <p class="prediction-demo-note">💡 Hover over the images to see objects relationships!</p>
+  </div>
+</div>
+
+<h2 id="probing-methodology">Probing Methodology<a class="headerlink" href="#probing-methodology" title="Permanent link">¶</a></h2>
+<p>We evaluate frozen VFM representations using lightweight probing heads:</p>
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1.5rem 0;">
+  <div style="background: var(--sparrta-card-bg); border-radius: 1rem; overflow: hidden;">
+    <a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../imgs/probing/fig_linear.png" data-desc-position="bottom"><img src="../imgs/probing/fig_linear.png" alt="Linear Probing" style="width: 100%; height: 100%;"></a>
+  </div>
+  <div style="background: var(--sparrta-card-bg); border-radius: 1rem; overflow: hidden;">
+    <a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../imgs/probing/fig_abmilp.png" data-desc-position="bottom"><img src="../imgs/probing/fig_abmilp.png" alt="AbMILP" style="width: 100%; height: 100%;"></a>
+  </div>
+  <div style="background: var(--sparrta-card-bg); border-radius: 1rem; overflow: hidden;">
+    <a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../imgs/probing/fig_efficient.png" data-desc-position="bottom"><img src="../imgs/probing/fig_efficient.png" alt="Efficient Probing" style="width: 100%; height: 100%;"></a>
+  </div>
+</div>
+<p style="text-align: center; color: var(--sparrta-text-secondary); margin-top: 0.5rem;">Three probing strategies: Linear Probing with GAP, AbMILP, and Efficient Probing.</p>
+
+<h3 id="probing-strategies">Probing Strategies<a class="headerlink" href="#probing-strategies" title="Permanent link">¶</a></h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio"><input id="__tabbed_2_2" name="__tabbed_2" type="radio"><input id="__tabbed_2_3" name="__tabbed_2" type="radio"><div class="tabbed-labels"><label for="__tabbed_2_1">Linear Probing (GAP)</label><label for="__tabbed_2_2">AbMILP</label><label for="__tabbed_2_3">Efficient Probing</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><strong>Global Average Pooling + Linear Classifier</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">for</span> <span class="n">images</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">features</span> <span class="o">=</span> <span class="n">vfm</span><span class="o">.</span><span class="n">forward_features</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>  <span class="c1"># [Batch_size, Num_patches, Dimension]</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">global_feat</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>     <span class="c1"># [Batch_size, Dimension]</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">prediction</span> <span class="o">=</span> <span class="n">linear_layer</span><span class="p">(</span><span class="n">global_feat</span><span class="p">)</span>  <span class="c1"># [Batch_size, 4]</span>
+</span></code></pre></div>
+<p><strong>Pros:</strong> Simple baseline, standard evaluation protocol</p>
+<p><strong>Cons:</strong> Treats all patches equally, loses local spatial information</p>
+</div>
+<div class="tabbed-block">
+<p><strong>Attention-Based Multiple Instance Learning Pooling</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">for</span> <span class="n">images</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  <span class="n">features</span> <span class="o">=</span> <span class="n">vfm</span><span class="o">.</span><span class="n">forward_features</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>  <span class="c1"># [Batch_size, Num_patches, Dimension]</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  <span class="n">attn_map</span> <span class="o">=</span> <span class="n">linear_layer</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>        <span class="c1"># [Batch_size, Num_patches, 1]</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  <span class="n">attn_map</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">attn_map</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>      <span class="c1"># [Batch_size, Num_patches, 1]</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  <span class="n">weighted_feat</span> <span class="o">=</span> <span class="p">(</span><span class="n">attn_map</span> <span class="o">*</span> <span class="n">features</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [Batch_size, Dimension]</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  <span class="n">prediction</span> <span class="o">=</span> <span class="n">linear_layer</span><span class="p">(</span><span class="n">weighted_feat</span><span class="p">)</span>   <span class="c1"># [Batch_size, 4]</span>
+</span></code></pre></div>
+<p><strong>Pros:</strong> Learns to focus on relevant patches</p>
+<p><strong>Cons:</strong> Single attention map may not capture multiple objects</p>
+</div>
+<div class="tabbed-block">
+<p><strong>Multi-Query Cross-Attention</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">queries</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_queries</span><span class="p">,</span> <span class="n">dimension</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.02</span><span class="p">)</span>  <span class="c1"># [1, Num_queries, Dimension]</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">values</span> <span class="o">=</span> <span class="n">linear_layer</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="p">(</span><span class="n">dimension</span><span class="o">/</span><span class="n">d_out</span><span class="p">)</span><span class="o">/</span><span class="n">num_queries</span><span class="p">)</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">for</span> <span class="n">images</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  <span class="n">features</span> <span class="o">=</span> <span class="n">vfm</span><span class="o">.</span><span class="n">forward_features</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>  <span class="c1"># [Batch_size, Num_patches, Dimension]</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  <span class="n">attn_map</span> <span class="o">=</span> <span class="n">queries</span> <span class="o">@</span> <span class="n">features</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [Batch_size, Num_queries, Num_patches]</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  <span class="n">attn_map</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">attn_map</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [Batch_size, Num_queries, Num_patches]</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  <span class="n">weighted_feat</span> <span class="o">=</span> <span class="n">matmul</span><span class="p">(</span><span class="n">attn_map</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>  <span class="c1"># [Batch_size, Num_queries, (Dimension/d_out)/Num_queries]</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  <span class="n">weighted_feat</span> <span class="o">=</span> <span class="n">weighted_feat</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">Batch_size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [Batch_size, Dimension/d_out]</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  <span class="n">prediction</span> <span class="o">=</span> <span class="n">linear_layer</span><span class="p">(</span><span class="n">weighted_feat</span><span class="p">)</span>   <span class="c1"># [Batch_size, 4]</span>
+</span></code></pre></div>
+<p><strong>Pros:</strong> Multiple queries can specialize to different objects/regions</p>
+<p><strong>Cons:</strong> More parameters, may overfit on small datasets</p>
+</div>
+</div>
+</div>
+<h3 id="hyperparameters">Hyperparameters<a class="headerlink" href="#hyperparameters" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Linear</th>
+<th>AbMILP</th>
+<th>Efficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Optimizer</td>
+<td>AdamW</td>
+<td>AdamW</td>
+<td>AdamW</td>
+</tr>
+<tr>
+<td>Scheduler</td>
+<td>Cosine Decay</td>
+<td>Cosine Decay</td>
+<td>Cosine Decay</td>
+</tr>
+<tr>
+<td>Learning Rate</td>
+<td>1e-2, 1e-3, 1e-4</td>
+<td>1e-2, 1e-3, 1e-4</td>
+<td>1e-2, 1e-3, 1e-4</td>
+</tr>
+<tr>
+<td>Weight Decay</td>
+<td>0.001</td>
+<td>0.001</td>
+<td>0.001</td>
+</tr>
+<tr>
+<td>Dropout</td>
+<td>0.2, 0.4, 0.6</td>
+<td>0.2, 0.4, 0.6</td>
+<td>0.2, 0.4, 0.6</td>
+</tr>
+<tr>
+<td>Batch Size</td>
+<td>256</td>
+<td>256</td>
+<td>256</td>
+</tr>
+<tr>
+<td>Epochs</td>
+<td>1000</td>
+<td>500</td>
+<td>500</td>
+</tr>
+<tr>
+<td>Warmup Steps</td>
+<td>200</td>
+<td>100</td>
+<td>100</td>
+</tr>
+<tr>
+<td>Queries (num_queries)</td>
+<td>-</td>
+<td>-</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Output Dimension (d_out)</td>
+<td>D_i</td>
+<td>D_i</td>
+<td>D_i/8</td>
+</tr>
+</tbody>
+</table>
+<h2 id="evaluation-protocol">Evaluation Protocol<a class="headerlink" href="#evaluation-protocol" title="Permanent link">¶</a></h2>
+<h3 id="data-splits">Data Splits<a class="headerlink" href="#data-splits" title="Permanent link">¶</a></h3>
+<p>For each environment and object triple:</p>
+<ul>
+<li><strong>Training</strong>: 80%</li>
+<li><strong>Validation</strong>: 10% (hyperparameter selection)</li>
+<li><strong>Test</strong>: 10% (final evaluation)</li>
+</ul>
+<h3 id="metrics">Metrics<a class="headerlink" href="#metrics" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Accuracy</strong>: Primary metric (4-way classification)</li>
+<li><strong>Mean Rank</strong>: Model ranking across environments/tasks</li>
+<li><strong>Per-Environment Accuracy</strong>: Fine-grained analysis</li>
+</ul>
+<h3 id="reproducibility">Reproducibility<a class="headerlink" href="#reproducibility" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Random Seeds</strong>: 2 seeds per experiment</li>
+<li><strong>Object Triples</strong>: 3 distinct triples per environment</li>
+<li><strong>Cross-Validation</strong>: Validation set for best checkpoint selection</li>
+</ul>
+<h2 id="key-insights">Key Insights<a class="headerlink" href="#key-insights" title="Permanent link">¶</a></h2>
+<h3 id="performance-hierarchy">Performance Hierarchy<a class="headerlink" href="#performance-hierarchy" title="Permanent link">¶</a></h3>
+<pre class="mermaid"><code>graph LR
+    A[Linear Probing] --&gt;|"worse than"| B[AbMILP]
+    B --&gt;|"worse than"| C[Efficient Probing]
+
+    style A fill:#ff6b6b,color:#fff
+    style B fill:#4a90e2,color:#fff
+    style C fill:#1dd1a1,color:#fff</code></pre>
+<div class="admonition success">
+<p class="admonition-title">Main Finding</p>
+<p><strong>Spatial information is primarily encoded at the patch level</strong> and is largely obscured by global pooling. Selective probing mechanisms (AbMILP, Efficient Probing) consistently outperform linear probing.</p>
+</div>
+<h3 id="model-rankings">Model Rankings<a class="headerlink" href="#model-rankings" title="Permanent link">¶</a></h3>
+<figure>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../imgs/performance/scatter_probe_comparison.png" data-desc-position="bottom"><img alt="Scatter Comparison" src="../imgs/performance/scatter_probe_comparison.png" width="100%"></a>
+  </p>
+<figcaption>Impact of probing strategy on spatial accuracy across all VFMs.</figcaption>
+</figure>
+<p><strong>Top Performers:</strong></p>
+<ol>
+<li><strong>VGGT</strong> (with Efficient Probing) - Best overall spatial reasoning</li>
+<li><strong>DINO-v2 (+reg) ViT-L</strong> - Strong across all probing methods</li>
+<li><strong>DINOv3</strong> - Best ViT-B model with Efficient Probing</li>
+<li><strong>MAE</strong> - Surprisingly strong performance</li>
+</ol>
+<p><strong>Underperformers:</strong></p>
+<ul>
+<li><strong>CLIP</strong> and <strong>DeiT</strong> - Limited spatial awareness, their semantic features don't transfer to spatial tasks</li>
+</ul>
+<h3 id="task-difficulty">Task Difficulty<a class="headerlink" href="#task-difficulty" title="Permanent link">¶</a></h3>
+<figure>
+<p><a class="glightbox" data-type="image" data-width="100%" data-height="auto" href="../imgs/performance/easy_vs_hard_comparison.png" data-desc-position="bottom"><img alt="Easy vs Hard" src="../imgs/performance/easy_vs_hard_comparison.png" width="100%"></a>
+  </p>
+<figcaption>Egocentric vs Allocentric performance comparison across all VFMs.</figcaption>
+</figure>
+<div class="admonition warning">
+<p class="admonition-title">Allocentric Challenge</p>
+<p>All models show <strong>significant performance drops</strong> on allocentric tasks compared to egocentric. This indicates that perspective-taking remains a fundamental challenge for current VFMs.</p>
+</div>
+<hr>
+<div style="text-align: center; margin-top: 2rem;">
+  <a href="../results/" class="md-button md-button--primary">View Full Results →</a>
+  <a href="../getting-started/" class="md-button">Get Started</a>
+</div>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer">
+        
+          
+          <a href="../unreal-scene-generation/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Unreal Scene Generation">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Unreal Scene Generation
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../results/" class="md-footer__link md-footer__link--next" aria-label="Next: More Results">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                More Results
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright © 2026 SpaRRTa Authors
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/gmum/SpaRRTa" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="mailto:turhancan.kargin@doctoral.uj.edu.pl" target="_blank" rel="noopener" title="" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M536.4-26.3c9.8-3.5 20.6-1 28 6.3s9.8 18.2 6.3 28l-178 496.9c-5 13.9-18.1 23.1-32.8 23.1-14.2 0-27-8.6-32.3-21.7l-64.2-158c-4.5-11-2.5-23.6 5.2-32.6l94.5-112.4c5.1-6.1 4.7-15-.9-20.6s-14.6-6-20.6-.9l-112.4 94.3c-9.1 7.6-21.6 9.6-32.6 5.2L38.1 216.8c-13.1-5.3-21.7-18.1-21.7-32.3 0-14.7 9.2-27.8 23.1-32.8z"></path></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.path", "navigation.top", "navigation.footer", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link", "announce.dismiss"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../javascripts/extra.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
