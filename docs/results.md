@@ -220,10 +220,10 @@ Linear Probing < AbMILP < Efficient Probing
 
 | Benchmark | SpaRRTa-ego | SpaRRTa-allo |
 |-----------|:-----------:|:------------:|
-| **Depth Estimation** | r = 0.63 | r = 0.66 |
-| **Camera Pose** | r = 0.58 | r = 0.58 |
-| **FGVC Aircraft** | r = 0.05 | r = 0.02 |
-| **Flowers102** | r = -0.08 | r = -0.15 |
+| **Depth Estimation** | r = 0.62 | r = 0.66 |
+| **Camera Pose** | r = 0.62 | r = 0.59 |
+| **FGVC Aircraft** | r = -0.23 | r = -0.02 |
+| **Flowers102** | r = -0.19 | r = 0.02 |
 
 !!! success "Validation"
     
