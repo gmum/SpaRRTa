@@ -12,7 +12,7 @@ Config-driven pipeline for generating spatial reasoning scenes in Unreal Engine 
 
 ### Trobleshooting
 
-If you encounter module not found errors and cannot pip install from Unreal Engine Python Console, watch this [video](https://dev.epicgames.com/community/learning/tutorials/lJly/python-install-modules-with-pip-unreal-engine-5-tutorial) called Python Install Modules With PIP - Unreal Engine 5.
+If you encounter module not found errors and cannot pip install from Unreal Engine Python Console, watch this [video](https://dev.epicgames.com/community/learning/tutorials/lJly/python-install-modules-with-pip-unreal-engine-5-tutorial) called Python Install Modules With PIP for Unreal Engine 5.
 
 ## Project Structure
 
@@ -156,6 +156,16 @@ python batch_generate_masks.py
 ```
 
 This reads `config.yaml` for the active environment/triple, locates the generated params files, and produces binary segmentation masks under `images/<environment>/<triple_id>/`.
+
+## Example Generations
+
+Sample outputs from the desert environment (triple `desert_1`: Truck, Rock, Human):
+
+<p align="center">
+  <img src="examples/img_0000.jpg" width="32%" />
+  <img src="examples/img_0001.jpg" width="32%" />
+  <img src="examples/img_0002.jpg" width="32%" />
+</p>
 
 ## License
 
