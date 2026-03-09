@@ -1,0 +1,221 @@
+# =============================================================================
+# SpaRRTa Scene Generation Configuration
+# =============================================================================
+# This is the master configuration file for the unreal-scene-gen pipeline.
+# Change `active_environment` and `active_triple` to switch what gets generated.
+
+# ---- Active Selection ----
+# Which environment and triple to generate scenes for in this run.
+active_environment: "desert"
+active_triple: "desert_1"
+
+# ---- Output Settings ----
+output_dir: "output"
+num_images: 500
+
+# ---- Screenshot Settings ----
+screenshot_resolution: [2048, 2048]
+
+# ---- Camera Intrinsics ----
+camera_intrinsics:
+  sensor_mm: 50.0
+  focal_length: 50.0
+  aperture: 10.0
+
+# =============================================================================
+# Environments
+# =============================================================================
+# Each environment defines its world-space anchor pose, sampling parameters,
+# and the object triples available for scene generation.
+
+environments:
+  desert:
+    pose: [67170.0, 40950.0, -36400.0]
+    sampling:
+      obj_proximity: 500
+      sample_radius: 300
+      max_distance: 1000
+      camera_range: 2500
+      camera_height_range: 1500
+    triples:
+      desert_1:
+        source: "truck"
+        target: "rock"
+        viewpoint: "human_1"
+      desert_2:
+        source: "camel"
+        target: "cactus"
+        viewpoint: "human_2"
+      desert_3:
+        source: "camel"
+        target: "barrel"
+        viewpoint: "human_3"
+
+  forest:
+    pose: [182540.0, -48990.0, 1020.0]
+    sampling:
+      obj_proximity: 500
+      sample_radius: 300
+      max_distance: 1000
+      camera_range: 2500
+      camera_height_range: 1500
+    triples:
+      forest_1:
+        source: "tree"
+        target: "rock"
+        viewpoint: "human_1"
+      forest_2:
+        source: "bear"
+        target: "tent"
+        viewpoint: "human_2"
+      forest_3:
+        source: "fox"
+        target: "rock"
+        viewpoint: "human_3"
+
+  winter_town:
+    pose: [-800.0, -4400.0, 97.0]
+    sampling:
+      obj_proximity: 500
+      sample_radius: 300
+      max_distance: 1000
+      camera_range: 2500
+      camera_height_range: 1500
+    triples:
+      winter_1:
+        source: "truck"
+        target: "tree"
+        viewpoint: "human_1"
+      winter_2:
+        source: "husky"
+        target: "snowman"
+        viewpoint: "human_2"
+      winter_3:
+        source: "deer"
+        target: "tree"
+        viewpoint: "human_3"
+
+  bridge:
+    pose: [-440.0, -40.0, 0.0]
+    sampling:
+      obj_proximity: 500
+      sample_radius: 300
+      max_distance: 1000
+      camera_range: 2500
+      camera_height_range: 1500
+    triples:
+      bridge_1:
+        source: "truck"
+        target: "tree"
+        viewpoint: "human_1"
+      bridge_2:
+        source: "bike"
+        target: "trash_bin"
+        viewpoint: "human_2"
+      bridge_3:
+        source: "vespa"
+        target: "trash_bin"
+        viewpoint: "human_3"
+
+  city:
+    pose: [-25640.0, 15330.0, 70.0]
+    sampling:
+      obj_proximity: 500
+      sample_radius: 300
+      max_distance: 1000
+      camera_range: 2500
+      camera_height_range: 1500
+    triples:
+      city_1:
+        source: "vespa"
+        target: "cone"
+        viewpoint: "human_1"
+      city_2:
+        source: "taxi"
+        target: "fire_hydrant"
+        viewpoint: "human_2"
+      city_3:
+        source: "bike"
+        target: "cone"
+        viewpoint: "human_3"
+
+# =============================================================================
+# Asset Registry
+# =============================================================================
+# Maps asset keys (referenced by triples above) to Unreal Engine asset paths.
+# Set `scale` to [x, y, z] to override the default scale, or null for default.
+# Update paths below to match your actual Unreal Engine project structure.
+
+assets:
+  # --- Vehicles ---
+  truck:
+    path: "/Game/CitySampleVehicles/vehicle04_Truck/Mesh/SM_vehTruck_vehicle04_LOD.SM_vehTruck_vehicle04_LOD"
+    scale: null
+  taxi:
+    path: "/Game/CitySampleVehicles/vehicle06_Car/Mesh/SM_vehCar_vehicle06_LOD"
+    scale: null
+  bike:
+    path: "/Game/sketchfab/old_bicycle/StaticMeshes/SM_old_bicycle"
+    scale: null
+  vespa:
+    path: "/Game/sketchfab/vespa/vespa"
+    scale: null
+
+  # --- Nature ---
+  tree:
+    path: "/Game/sketchfab/tree/StaticMeshes/tree"
+    scale: null
+  rock:
+    path: "/Game/RealisticDesertPack/Meshes/Rocks/SM_Rock_10"
+    scale: null
+  cactus:
+    path: "/Game/sketchfab/cactus/cactus"
+    scale: null
+
+  # --- Animals ---
+  bear:
+    path: "/Game/sketchfab/bear/bear"
+    scale: null
+  fox:
+    path: "/Game/sketchfab/fox/fox"
+    scale: null
+  camel:
+    path: "/Game/sketchfab/camel/camel"
+    scale: null
+  husky:
+    path: "/Game/sketchfab/husky/husky"
+    scale: null
+  deer:
+    path: "/Game/sketchfab/deer/deer"
+    scale: null
+
+  # --- Objects ---
+  tent:
+    path: "/Game/sketchfab/tent/tent"
+    scale: null
+  barrel:
+    path: "/Game/sketchfab/barrel/barrel"
+    scale: null
+  snowman:
+    path: "/Game/sketchfab/snowman/snowman"
+    scale: null
+  trash_bin:
+    path: "/Game/AutomotiveBridgeScene/Meshes/Environment/Bridge/SM_Trashcan"
+    scale: null
+  cone:
+    path: "/Game/sketchfab/traffic_cone/traffic_cone"
+    scale: null
+  fire_hydrant:
+    path: "/Game/sketchfab/fire_hydrant/fire_hydrant"
+    scale: null
+
+  # --- Humans (different models for allocentric viewpoints) ---
+  human_1:
+    path: "/Game/Scanned3DPeoplePack/RP_Character/rp_dennis_posed_004_ue4/rp_dennis_posed_004"
+    scale: null
+  human_2:
+    path: "/Game/Scanned3DPeoplePack/RP_Character/rp_eric_posed_001_ue4/rp_eric_posed_001"
+    scale: null
+  human_3:
+    path: "/Game/Scanned3DPeoplePack/RP_Character/rp_manuel_posed_002_ue4/rp_manuel_posed_002"
+    scale: null
