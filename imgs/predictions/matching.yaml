@@ -1,0 +1,42 @@
+
+"Environments":
+    - name: 'Bridge',
+      orig_file: './Bridge/original.jpg'
+      camera_perspective_file: './Bridge/blended_camera.jpg'
+      human_perspective_file: './Bridge/blended_human.jpg'
+      camera_reference: 'Tree'
+      camera_target: 'Car'
+      human_reference: 'Tree'
+      human_target: 'Car'
+    - name: 'Forest',
+      orig_file: './Forest/original.jpg'
+      camera_perspective_file: './Forest/blended_camera.jpg'
+      human_perspective_file: './Forest/blended_human.jpg'
+      camera_reference: 'Tree'
+      camera_target: 'Human'
+      human_reference: 'Rock'
+      human_target: 'Tree'
+    - name: 'Winter_Town',
+      orig_file: './Winter_Town/original.jpg'
+      camera_perspective_file: './Winter_Town/blended_camera.jpg'
+      human_perspective_file: './Winter_Town/blended_human.jpg'
+      camera_reference: 'Snowman'
+      camera_target: 'Husky'
+      human_reference: 'Snowman'
+      human_target: 'Husky'
+    - name: 'City',
+      orig_file: './City/original.jpg'
+      camera_perspective_file: './City/blended_camera.jpg'
+      human_perspective_file: './City/blended_human.jpg'
+      camera_reference: 'Traffic Cone'
+      camera_target: 'Motorcycle'
+      human_reference: 'Traffic Cone'
+      human_target: 'Motorcycle'
+    - name: 'Desert',
+      orig_file: './Desert/original.jpg'
+      camera_perspective_file: './Desert/blended_camera.jpg'
+      human_perspective_file: './Desert/blended_human.jpg'
+      camera_reference: 'Rock'
+      camera_target: 'Car'
+      human_reference: 'Rock'
+      human_target: 'Car'
