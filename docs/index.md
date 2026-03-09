@@ -40,8 +40,8 @@ hide:
       <a href="https://arxiv.org/abs/2601.11729" class="hero-btn hero-btn-secondary" target="_blank">
         <span class="twemoji">📄</span> Paper
       </a>
-      <a href="#" class="hero-btn hero-btn-secondary" style="opacity: 0.7; cursor: not-allowed;">
-        <span class="twemoji">📊</span> Dataset (coming soon)
+      <a href="https://huggingface.co/datasets/turhancan97/SpaRRTa" class="hero-btn hero-btn-secondary" target="_blank">
+        <span class="twemoji">📊</span> Dataset
       </a>
     </div>
     
