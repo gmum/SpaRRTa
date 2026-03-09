@@ -16,6 +16,8 @@
 
 :newspaper: **NEWS**:
 
+- *Mar. 2026:* Scene generation pipeline is available on [GitHub](https://github.com/gmum/SpaRRTa/tree/main/unreal-scene-gen)!
+- *Mar. 2026:* Dataset is available on [HuggingFace](https://huggingface.co/datasets/turhancan97/SpaRRTa)!
 - *Jan. 2026:* Codebase will be released soon!
 - *Jan. 2026:* Paper is available on [arXiv](https://arxiv.org/abs/2601.11729).
 
