@@ -10,6 +10,10 @@ Config-driven pipeline for generating spatial reasoning scenes in Unreal Engine 
 - **UnrealCV** plugin (only for mask generation with `batch_generate_masks.py`)
 - **NumPy** and **Pillow** (only for mask generation)
 
+### Trobleshooting
+
+If you encounter module not found errors and cannot pip install from Unreal Engine Python Console, watch this [video](https://dev.epicgames.com/community/learning/tutorials/lJly/python-install-modules-with-pip-unreal-engine-5-tutorial) called Python Install Modules With PIP - Unreal Engine 5.
+
 ## Project Structure
 
 ```

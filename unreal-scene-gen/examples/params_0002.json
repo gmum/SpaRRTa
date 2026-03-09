@@ -1,0 +1,71 @@
+{
+  "environment": "desert",
+  "triple_id": "desert_1",
+  "camera": {
+    "label": "RenderCamera",
+    "path": "/Game/RealisticDesertPack/Maps/Desert_A.Desert_A:PersistentLevel.CineCameraActor_3",
+    "location": {
+      "x": 64894.661370091046,
+      "y": 40532.4142326871,
+      "z": -35748.19111992559
+    },
+    "rotation": {
+      "pitch": -12.810911111636411,
+      "yaw": 21.795976673102736,
+      "roll": 3.743751747540112e-08
+    },
+    "intrinsics": {
+      "sensor_width_mm": 50.0,
+      "sensor_height_mm": 50.0,
+      "focal_length_mm": 50.0,
+      "aperture_f": 10.0,
+      "hfov_deg": 53.13010235415598,
+      "vfov_deg": 53.13010235415598,
+      "focus": {
+        "method": "DISABLE: 3>",
+        "manual_distance": 100000.0
+      }
+    }
+  },
+  "actors": {
+    "/Game/RealisticDesertPack/Maps/Desert_A.Desert_A:PersistentLevel.StaticMeshActor_9": {
+      "label": "Truck",
+      "location": {
+        "x": 68043.23808342045,
+        "y": 41361.50661984576,
+        "z": -36398.184841156006
+      },
+      "rotation": {
+        "pitch": 0.0,
+        "yaw": -19.743164062500004,
+        "roll": 0.0
+      }
+    },
+    "/Game/RealisticDesertPack/Maps/Desert_A.Desert_A:PersistentLevel.StaticMeshActor_10": {
+      "label": "Rock",
+      "location": {
+        "x": 67309.50787881126,
+        "y": 41117.923940718465,
+        "z": -36252.00500869751
+      },
+      "rotation": {
+        "pitch": 0.0,
+        "yaw": -159.52243041992185,
+        "roll": 0.0
+      }
+    },
+    "/Game/RealisticDesertPack/Maps/Desert_A.Desert_A:PersistentLevel.StaticMeshActor_11": {
+      "label": "Human 1",
+      "location": {
+        "x": 66640.55473657735,
+        "y": 42040.73483883804,
+        "z": -36384.451942920685
+      },
+      "rotation": {
+        "pitch": 0.0,
+        "yaw": -78.42605590820312,
+        "roll": 0.0
+      }
+    }
+  }
+}
