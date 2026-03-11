@@ -39,16 +39,16 @@ environments:
       camera_height_range: 1500
     triples:
       desert_1:
-        source: "truck"
-        target: "rock"
+        source: "rock"
+        target: "truck"
         viewpoint: "human_1"
       desert_2:
-        source: "camel"
-        target: "cactus"
+        source: "cactus"
+        target: "camel"
         viewpoint: "human_2"
       desert_3:
-        source: "camel"
-        target: "barrel"
+        source: "barrel"
+        target: "camel"
         viewpoint: "human_3"
 
   forest:
@@ -65,12 +65,12 @@ environments:
         target: "rock"
         viewpoint: "human_1"
       forest_2:
-        source: "bear"
-        target: "tent"
+        source: "tent"
+        target: "bear"
         viewpoint: "human_2"
       forest_3:
-        source: "fox"
-        target: "rock"
+        source: "rock"
+        target: "fox"
         viewpoint: "human_3"
 
   winter_town:
@@ -83,16 +83,16 @@ environments:
       camera_height_range: 1500
     triples:
       winter_1:
-        source: "truck"
-        target: "tree"
+        source: "tree"
+        target: "truck"
         viewpoint: "human_1"
       winter_2:
-        source: "husky"
-        target: "snowman"
+        source: "snowman"
+        target: "husky"
         viewpoint: "human_2"
       winter_3:
-        source: "deer"
-        target: "tree"
+        source: "tree"
+        target: "deer"
         viewpoint: "human_3"
 
   bridge:
@@ -105,16 +105,16 @@ environments:
       camera_height_range: 1500
     triples:
       bridge_1:
-        source: "truck"
-        target: "tree"
+        source: "tree"
+        target: "truck"
         viewpoint: "human_1"
       bridge_2:
-        source: "bike"
-        target: "trash_bin"
+        source: "trash_bin"
+        target: "bike"
         viewpoint: "human_2"
       bridge_3:
-        source: "vespa"
-        target: "trash_bin"
+        source: "trash_bin"
+        target: "vespa"
         viewpoint: "human_3"
 
   city:
@@ -127,16 +127,16 @@ environments:
       camera_height_range: 1500
     triples:
       city_1:
-        source: "vespa"
-        target: "cone"
+        source: "cone"
+        target: "vespa"
         viewpoint: "human_1"
       city_2:
-        source: "taxi"
-        target: "fire_hydrant"
+        source: "fire_hydrant"
+        target: "taxi"
         viewpoint: "human_2"
       city_3:
-        source: "bike"
-        target: "cone"
+        source: "cone"
+        target: "bike"
         viewpoint: "human_3"
 
 # =============================================================================
