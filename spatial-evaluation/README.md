@@ -11,7 +11,7 @@ are rendered.
 > This page is an overview; clone that repo to run the experiments.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/turhancan97/SpaRRTa/main/assets/teaser.png" alt="SpaRRTa teaser" width="100%">
+  <img src="https://github.com/user-attachments/assets/fd855699-25bd-42a0-88ec-6aa7da3a47ee" alt="SpaRRTa teaser" width="100%">
 </p>
 
 ## What it does
