@@ -17,6 +17,7 @@
 :newspaper: **NEWS**:
 
 - *Jun. 2026:* Evaluation code is available on [GitHub](https://github.com/gmum/SpaRRTa/tree/main/spatial-evaluation).
+- *Apr. 2026:* Paper accepted to the [2nd Workshop on World Models (ICLR 2026)](https://sites.google.com/view/iclr-2026-workshop-world-model/accepted-papers)!
 - *Mar. 2026:* Model and demo space are available on [HuggingFace Model](https://huggingface.co/turhancan97/SpaRRTa-probes) and [HuggingFace Space](https://huggingface.co/spaces/turhancan97/SpaRRTa-demo).
 - *Mar. 2026:* Scene generation pipeline is available on [GitHub](https://github.com/gmum/SpaRRTa/tree/main/unreal-scene-gen).
 - *Mar. 2026:* Dataset is available on [HuggingFace](https://huggingface.co/datasets/turhancan97/SpaRRTa).
