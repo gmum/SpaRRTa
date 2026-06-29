@@ -1,499 +1,324 @@
 ---
 title: User Guide
-description: Comprehensive guide to using SpaRRTa for spatial reasoning evaluation
+description: Researcher-focused workflows for running and extending SpaRRTa experiments
 ---
 
 # User Guide
 
-This guide provides detailed documentation on using SpaRRTa for evaluating spatial reasoning in Visual Foundation Models.
+This page is the **day-to-day operations manual** for SpaRRTa after initial setup is complete.
 
-!!! warning "Coming Soon"
+If you have not done your first install or first run yet, start with [Getting Started](getting-started.md). This guide assumes you already understand the basic two-repo layout:
+
+- **This repository**: project website and `unreal-scene-gen/`
+- **[`turhancan97/SpaRRTa`](https://github.com/turhancan97/SpaRRTa)**: evaluation, probing, transfer, lego evaluation, and attention analysis
+
+The goal here is to help researchers move from “it runs” to “I know how to use it well.”
+
+## Environment Variables and Data Layout
+
+The evaluation repo relies on a small set of environment variables to find data, cache features, and store model weights.
+
+### Core Variables
+
+```bash
+export SPARRTA_DATA_ROOT=/path/to/sparrta/unreal
+export SPARRTA_LEGO_ROOT=/path/to/sparrta/lego
+export SPARRTA_ANALYSIS_ROOT=/path/to/sparrta/attn
+export SPARRTA_CACHE_DIR=./cache
+export SPARRTA_MODELS_DIR=~/.cache/sparrta/models
+```
+
+### What each variable is for
+
+- `SPARRTA_DATA_ROOT`: synthetic Unreal dataset used for the main benchmark
+- `SPARRTA_LEGO_ROOT`: real-world lego dataset used for sim-to-real evaluation
+- `SPARRTA_ANALYSIS_ROOT`: attention-analysis dataset with masks
+- `SPARRTA_CACHE_DIR`: cache for frozen features computed from backbones
+- `SPARRTA_MODELS_DIR`: storage location for downloaded model weights
+
+### Expected synthetic data layout
+
+The upstream evaluation repo documents the Unreal dataset like this:
+
+```text
+$SPARRTA_DATA_ROOT/
+  forest/mid-objects/
+    img_0001.jpg
+    params_0001.json
+    ...
+  desert/mid-objects/
+  winter_town/mid-objects/
+  bridge/mid-objects/
+  city/mid-objects/
+```
+
+Each sample is an image plus a matching `params_*.json` file. In practice:
+
+- `img_*.jpg` stores the rendered scene
+- `params_*.json` stores the camera and actor geometry used by the benchmark
+
+The lego dataset is organized by class labels such as `front`, `back`, `left`, and `right`, while the attention-analysis dataset adds segmentation masks under a `metadata/` folder.
+
+## Common Evaluation Workflows
+
+### Run one backbone on one environment
+
+This is the safest default experimental path:
+
+```bash
+python train.py \
+  backbone=dino_b16 \
+  dataset=unreal_position \
+  probe=classifier probe._target_=sparrta.models.probes.EfficientProbing \
+  dataset.perspective=camera \
+  environment=forest
+```
+
+This command means:
+
+- backbone: `dino_b16`
+- dataset: synthetic Unreal benchmark
+- probe head: `EfficientProbing`
+- perspective: camera / egocentric
+- environment: forest
+
+### Switch from egocentric to allocentric
+
+To run the same experiment from the human viewpoint:
+
+```bash
+python train.py \
+  backbone=dino_b16 \
+  dataset=unreal_position \
+  probe=classifier probe._target_=sparrta.models.probes.EfficientProbing \
+  dataset.perspective=human \
+  environment=forest
+```
+
+Use:
+
+- `dataset.perspective=camera` for **SpaRRTa-ego**
+- `dataset.perspective=human` for **SpaRRTa-allo**
+
+### Swap the probe head
+
+The upstream repo exposes three main probing choices:
+
+- `sparrta.models.probes.ClassificationHead`
+- `sparrta.models.probes.ABMILPHead`
+- `sparrta.models.probes.EfficientProbing`
+
+Example with a simpler baseline probe:
+
+```bash
+python train.py \
+  backbone=dino_b16 \
+  dataset=unreal_position \
+  probe=classifier probe._target_=sparrta.models.probes.ClassificationHead \
+  dataset.perspective=camera \
+  environment=forest
+```
+
+### Change the backbone
+
+Once the workflow is stable, you can swap the backbone on the CLI:
+
+```bash
+python train.py \
+  backbone=mae_b16 \
+  dataset=unreal_position \
+  probe=classifier probe._target_=sparrta.models.probes.EfficientProbing \
+  dataset.perspective=camera \
+  environment=forest
+```
+
+Other safe starting choices from the upstream README include:
+
+- `dinov2_b14`
+- `dinov2_b14_reg`
+- `dinov2_l14_reg`
+- `dinov3_timm`
+- `clip_b16_laion`
+
+### Inspect the resolved Hydra config
+
+Before launching a run, inspect the final resolved config:
+
+```bash
+python train.py --cfg job backbone=dino_b16 dataset=unreal_position
+```
+
+This is the fastest way to verify:
+
+- selected backbone
+- selected probe
+- dataset perspective
+- environment
+- output configuration
+
+### Where results go
+
+The upstream repo writes results under its default output directory, `result/`. Feature caches are written under `SPARRTA_CACHE_DIR`.
+
+## Choosing Backbones and Probes
+
+### Recommended starting backbones
+
+For a reliable first set of experiments, start with backbones that work out of the box:
+
+- `dino_b16`
+- `dinov2_b14`
+- `dinov2_b14_reg`
+- `dinov2_l14_reg`
+- `dinov3_timm`
+- `mae_b16`
+- `clip_b16_laion`
+
+These are easier to use because they do not require separate external code repositories.
+
+### Backbones that need extra setup
+
+Some backbones depend on external repos or weights:
+
+- `vggt_l16` needs `VGGT_REPO`
+- `spa_b16`, `spa_l16` need `SPA_REPO`
+- `croco_b16`, `crocov2_b16` need `CROCO_REPO`
+- `dinov3_b16` needs `DINOV3_REPO` and `DINOV3_WEIGHTS`
+
+If one of these fails immediately, the usual cause is a missing environment variable or missing local checkout.
+
+### Practical probe tradeoffs
+
+- **ClassificationHead**: cheapest and simplest baseline; useful for quick comparisons
+- **ABMILPHead**: attention-based pooling; stronger than a plain pooled baseline
+- **EfficientProbing**: strongest default choice; best fit when you care about the benchmark’s main result that spatial information lives in patch tokens
+
+Recommended default:
+
+- start with `EfficientProbing` for serious experiments
+- use `ClassificationHead` when you want a lightweight baseline
+
+## Advanced Workflows
+
+### Leave-one-environment-out and few-shot transfer
+
+**What it is for:** testing generalization across environments and few-shot adaptation to a held-out domain.
+
+**Relevant scripts:**
+
+- `scripts/run_loto_fewshot.py`
+- `scripts/summarize_loto_fewshot.py`
+
+**What you need:**
+
+- `SPARRTA_DATA_ROOT`
+- a working evaluation installation
+
+**What to expect:** result CSVs and summary tables/plots for holdout-environment transfer and adaptation performance.
+
+The upstream repo also documents three protocol values used by the training pipeline:
+
+- `default`
+- `loto_source_to_target`
+- `target_only`
+
+### Lego sim-to-real evaluation
+
+**What it is for:** testing whether probes trained on synthetic SpaRRTa data transfer to a small real-world setup.
+
+**Relevant scripts:**
+
+- `scripts/run_lego_rebuttal.py`
+- `scripts/summarize_lego_rebuttal.py`
+
+**What you need:**
+
+- `SPARRTA_LEGO_ROOT`
+- a trained or runnable experimental configuration
+
+**What to expect:** comparison results for synthetic-to-real transfer on the lego split.
+
+### Attention analysis
+
+**What it is for:** understanding where frozen backbones attend and how attention flows between objects, background, and CLS/register tokens.
+
+**Relevant scripts:**
+
+- `sparrta/analysis/visualize_patch_masks.py`
+- `sparrta/analysis/compute_attention.py`
+- `sparrta/analysis/plot_attention.py`
+- `sparrta/analysis/aggregate_attention.py`
+- `sparrta/analysis/attention_rollout.py`
+
+**What you need:**
+
+- `SPARRTA_ANALYSIS_ROOT`
+- the attention-analysis dataset with masks
+
+**What to expect:** per-layer attention CSVs, plots, and rollout visualizations, usually under `result/attention/<environment>/`.
+
+The upstream README shows a minimal command:
+
+```bash
+python sparrta/analysis/compute_attention.py environment=winter_town
+```
+
+And for config inspection:
+
+```bash
+python sparrta/analysis/compute_attention.py --cfg job --resolve
+```
+
+## Using Custom Unreal Data
+
+If you want to go beyond the published benchmark data, this repository provides the Unreal generation pipeline in [`unreal-scene-gen`](unreal-scene-generation.md).
+
+That pipeline can generate:
+
+- RGB images
+- scene metadata in `params_*.json`
+- optional masks via UnrealCV
+
+This is useful for:
+
+- generating more samples
+- exploring new scene layouts
+- testing custom data curation ideas
+
+However, generated outputs should be treated carefully in relation to the evaluation repo:
+
+- the local generator provides the core ingredients needed by SpaRRTa
+- the evaluation repo expects a specific on-disk layout
+- custom outputs may require adaptation to match that layout
+
+So the practical recommendation is:
+
+1. start with the published datasets
+2. validate your workflow
+3. only then move to custom generated data
+
+## Troubleshooting
+
+!!! failure "The run fails immediately with a dataset error"
     
-    This section is currently under development. Full documentation will be available soon.
+    Check `SPARRTA_DATA_ROOT`, `SPARRTA_LEGO_ROOT`, or `SPARRTA_ANALYSIS_ROOT`. A wrong path or missing dataset is the most common failure mode.
 
-<!--
-## Dataset Structure
-
-### Directory Layout
-
-```
-data/sparrta/
-├── forest/
-│   ├── ego/
-│   │   ├── images/
-│   │   │   ├── 00001.jpg
-│   │   │   ├── 00002.jpg
-│   │   │   └── ...
-│   │   ├── masks/
-│   │   │   ├── 00001.png
-│   │   │   └── ...
-│   │   └── metadata.json
-│   └── allo/
-│       └── ...
-├── desert/
-│   └── ...
-├── winter_town/
-│   └── ...
-├── bridge/
-│   └── ...
-└── city/
-    └── ...
-```
-
-### Metadata Format
-
-Each environment contains a `metadata.json` file:
-
-```json
-{
-  "images": [
-    {
-      "id": "00001",
-      "filename": "images/00001.jpg",
-      "mask": "masks/00001.png",
-      "source_object": {
-        "class": "tree",
-        "position": [10.5, 20.3, 0.0],
-        "rotation": [0.0, 0.0, 45.0]
-      },
-      "target_object": {
-        "class": "bear",
-        "position": [15.2, 18.7, 0.0],
-        "rotation": [0.0, 0.0, 90.0]
-      },
-      "viewpoint_object": {
-        "class": "human",
-        "position": [5.0, 25.0, 0.0],
-        "rotation": [0.0, 0.0, 180.0]
-      },
-      "camera": {
-        "position": [0.0, 30.0, 2.0],
-        "rotation": [0.0, -15.0, 0.0],
-        "fov": 53.0
-      },
-      "label_ego": "right",
-      "label_allo": "left"
-    }
-  ]
-}
-```
-
-## Loading Data
-
-### Using the Dataset Class
-
-```python
-from sparrta import SpaRRTaDataset
-
-# Load specific environment and task
-dataset = SpaRRTaDataset(
-    data_path="data/sparrta",
-    environment="forest",
-    task="ego",  # or "allo"
-    split="train",  # "train", "val", "test"
-    transform=None,  # Optional torchvision transforms
-)
-
-# Iterate over samples
-for image, label, metadata in dataset:
-    print(f"Image shape: {image.shape}")
-    print(f"Label: {label}")  # 0=front, 1=back, 2=left, 3=right
-    print(f"Source: {metadata['source_object']['class']}")
-```
-
-### Custom Data Loading
-
-```python
-import torch
-from torch.utils.data import DataLoader
-
-# Create data loaders
-train_loader = DataLoader(
-    SpaRRTaDataset(data_path, env, task, split="train"),
-    batch_size=256,
-    shuffle=True,
-    num_workers=4,
-    pin_memory=True,
-)
-
-val_loader = DataLoader(
-    SpaRRTaDataset(data_path, env, task, split="val"),
-    batch_size=256,
-    shuffle=False,
-)
-```
-
-### Filtering by Object Triple
-
-```python
-# Load only specific object combinations
-dataset = SpaRRTaDataset(
-    data_path="data/sparrta",
-    environment="forest",
-    task="ego",
-    object_triples=[
-        ("tree", "bear", "human"),
-        ("rock", "fox", "human"),
-    ],
-)
-```
-
-## Model Integration
-
-### Supported Models
-
-```python
-from sparrta.models import list_available_models, load_vfm
-
-# List all supported models
-print(list_available_models())
-# ['dino_vitb16', 'dinov2_vitb14', 'dinov2_vitl14', 'dinov2_reg_vitb14', ...]
-
-# Load a model
-model = load_vfm("dinov2_vitb14")
-```
-
-### Adding Custom Models
-
-```python
-from sparrta.models import register_model, VFMBase
-
-@register_model("my_custom_model")
-class MyCustomModel(VFMBase):
-    def __init__(self, checkpoint_path=None):
-        super().__init__()
-        self.model = load_my_model(checkpoint_path)
-        
-    def extract_features(self, images):
-        """
-        Extract patch features from images.
-        
-        Args:
-            images: Tensor of shape [B, 3, H, W]
-            
-        Returns:
-            features: Tensor of shape [B, N, D]
-                - N: number of patches
-                - D: feature dimension
-        """
-        return self.model.forward_features(images)
+!!! failure "A selected backbone errors before training starts"
     
-    @property
-    def feature_dim(self):
-        return 768  # Feature dimension
+    Backbones such as VGGT, SPA, CroCo, and local DINOv3 may need external repos or local weights. If you want the most reliable path, use `dino_b16`, `dinov2_*`, `dinov3_timm`, `mae_b16`, or `clip_b16_laion`.
+
+!!! failure "The run completes but expected outputs are missing"
     
-    @property
-    def num_patches(self):
-        return 196  # For 224x224 with 16x16 patches
+    Inspect the resolved Hydra config first and verify the output directory assumptions. Also check whether results are being written under `result/` and features under `SPARRTA_CACHE_DIR`.
 
-# Use the custom model
-model = load_vfm("my_custom_model", checkpoint_path="path/to/weights.pth")
-```
-
-## Probing Heads
-
-### Linear Probing
-
-```python
-from sparrta.probes import LinearProbe
-
-probe = LinearProbe(
-    input_dim=768,      # VFM feature dimension
-    num_classes=4,      # Front, Back, Left, Right
-    dropout=0.4,
-)
-
-# Training
-features = model.extract_features(images)  # [B, N, D]
-pooled = features.mean(dim=1)               # [B, D] - Global average pooling
-logits = probe(pooled)                      # [B, 4]
-```
-
-### AbMILP Probing
-
-```python
-from sparrta.probes import AbMILPProbe
-
-probe = AbMILPProbe(
-    input_dim=768,
-    num_classes=4,
-    hidden_dim=256,
-    dropout=0.4,
-)
-
-# Training
-features = model.extract_features(images)  # [B, N, D]
-logits, attention = probe(features)        # [B, 4], [B, N]
-```
-
-### Efficient Probing
-
-```python
-from sparrta.probes import EfficientProbe
-
-probe = EfficientProbe(
-    input_dim=768,
-    num_classes=4,
-    num_queries=4,
-    output_dim=96,  # input_dim / 8
-    dropout=0.4,
-)
-
-# Training
-features = model.extract_features(images)  # [B, N, D]
-logits, attentions = probe(features)       # [B, 4], [B, Q, N]
-```
-
-## Training Pipeline
-
-### Basic Training Loop
-
-```python
-import torch
-import torch.nn as nn
-from torch.optim import AdamW
-from torch.optim.lr_scheduler import CosineAnnealingLR
-
-# Setup
-model = load_vfm("dinov2_vitb14").eval().cuda()
-probe = EfficientProbe(input_dim=768, num_classes=4).cuda()
-
-optimizer = AdamW(probe.parameters(), lr=1e-3, weight_decay=1e-3)
-scheduler = CosineAnnealingLR(optimizer, T_max=500, eta_min=1e-6)
-criterion = nn.CrossEntropyLoss()
-
-# Training
-for epoch in range(500):
-    probe.train()
-    for images, labels, _ in train_loader:
-        images, labels = images.cuda(), labels.cuda()
-        
-        # Extract frozen features
-        with torch.no_grad():
-            features = model.extract_features(images)
-        
-        # Forward through probe
-        logits, _ = probe(features)
-        loss = criterion(logits, labels)
-        
-        # Backward
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+!!! info "Do I need UnrealCV for all SpaRRTa workflows?"
     
-    scheduler.step()
-    
-    # Validation
-    probe.eval()
-    correct, total = 0, 0
-    with torch.no_grad():
-        for images, labels, _ in val_loader:
-            images, labels = images.cuda(), labels.cuda()
-            features = model.extract_features(images)
-            logits, _ = probe(features)
-            correct += (logits.argmax(dim=1) == labels).sum().item()
-            total += len(labels)
-    
-    print(f"Epoch {epoch}: Val Acc = {100*correct/total:.2f}%")
-```
+    No. UnrealCV is only needed for mask generation in the Unreal pipeline. Standard benchmark evaluation on published data does not require UnrealCV.
 
-### Using the Evaluator
+## References
 
-```python
-from sparrta import SpaRRTaEvaluator
-
-evaluator = SpaRRTaEvaluator(
-    data_path="data/sparrta",
-    probe_type="efficient",
-    device="cuda",
-)
-
-# Full evaluation
-results = evaluator.evaluate(
-    model=model,
-    environments="all",  # or ["forest", "desert"]
-    tasks=["ego", "allo"],
-    seeds=[42, 123],
-    triples_per_env=3,
-)
-
-# Access results
-print(results.summary())
-print(results.to_dataframe())
-results.save("results/dinov2_results.json")
-```
-
-## Visualization
-
-### Attention Maps
-
-```python
-from sparrta.visualization import visualize_attention
-
-# Get attention from probe
-features = model.extract_features(image.unsqueeze(0))
-_, attention = probe(features)  # [1, Q, N]
-
-# Visualize
-fig = visualize_attention(
-    image=image,
-    attention=attention[0],  # [Q, N]
-    patch_size=16,
-    queries_to_show=[0, 1, 2, 3],
-)
-fig.savefig("attention_map.png")
-```
-
-### Results Plotting
-
-```python
-from sparrta.visualization import plot_results
-
-# Load results
-results = Results.load("results/all_models.json")
-
-# Generate plots
-plot_results.accuracy_by_environment(results, save_path="figs/env_acc.pdf")
-plot_results.probe_comparison(results, save_path="figs/probe_cmp.pdf")
-plot_results.ego_vs_allo(results, save_path="figs/ego_allo.pdf")
-plot_results.model_ranking(results, save_path="figs/ranking.pdf")
-```
-
-## Configuration Reference
-
-### Full Configuration Options
-
-```yaml
-# configs/full_config.yaml
-
-# Data configuration
-data:
-  path: "data/sparrta"
-  environments:
-    - forest
-    - desert
-    - winter_town
-    - bridge
-    - city
-  tasks:
-    - ego
-    - allo
-  object_triples: null  # null = use all available
-  image_size: 224
-  normalize: true
-  augmentation: false
-
-# Model configuration
-model:
-  name: "dinov2_vitb14"
-  checkpoint: null
-  freeze: true
-  layer: -1  # -1 = last layer, or specify layer index
-
-# Probe configuration
-probe:
-  type: "efficient"  # linear, abmilp, efficient
-  
-  # Linear probe settings
-  linear:
-    dropout: 0.4
-    
-  # AbMILP settings
-  abmilp:
-    hidden_dim: 256
-    dropout: 0.4
-    
-  # Efficient probe settings
-  efficient:
-    num_queries: 4
-    output_dim: null  # null = input_dim / 8
-    dropout: 0.4
-
-# Training configuration
-training:
-  batch_size: 256
-  learning_rate: 0.001
-  weight_decay: 0.001
-  epochs: 500
-  warmup_steps: 100
-  scheduler: cosine
-  gradient_clip: 1.0
-  mixed_precision: true
-
-# Evaluation configuration
-evaluation:
-  seeds: [42, 123]
-  triples_per_env: 3
-  checkpoint_selection: "best_val"  # best_val, last
-  
-# Logging configuration
-logging:
-  wandb: false
-  project: "sparrta"
-  save_dir: "results/"
-  save_attention: true
-```
-
-## Best Practices
-
-### Memory Optimization
-
-```python
-# Use gradient checkpointing for large models
-model = load_vfm("dinov2_vitl14", gradient_checkpointing=True)
-
-# Use mixed precision training
-from torch.cuda.amp import autocast, GradScaler
-
-scaler = GradScaler()
-
-with autocast():
-    features = model.extract_features(images)
-    logits, _ = probe(features)
-    loss = criterion(logits, labels)
-
-scaler.scale(loss).backward()
-scaler.step(optimizer)
-scaler.update()
-```
-
-### Multi-GPU Training
-
-```python
-import torch.distributed as dist
-from torch.nn.parallel import DistributedDataParallel as DDP
-
-# Initialize distributed
-dist.init_process_group(backend="nccl")
-local_rank = int(os.environ["LOCAL_RANK"])
-
-# Wrap probe in DDP (model stays frozen)
-probe = DDP(probe, device_ids=[local_rank])
-```
-
-### Reproducibility
-
-```python
-import torch
-import numpy as np
-import random
-
-def set_seed(seed):
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
-    np.random.seed(seed)
-    random.seed(seed)
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
-
-set_seed(42)
-```
-
----
-
-<div style="text-align: center; margin-top: 2rem;">
-  <a href="../examples/" class="md-button md-button--primary">View Examples →</a>
-  <a href="../results/" class="md-button">See Results</a>
-</div>
-
--->
+- [Getting Started](getting-started.md)
+- [Evaluation of VFMs](evaluation-vfms.md)
+- [Unreal Scene Generation](unreal-scene-generation.md)
+- [Spatial evaluation overview](https://github.com/gmum/SpaRRTa/tree/main/spatial-evaluation)
+- Upstream evaluation repo: https://github.com/turhancan97/SpaRRTa
