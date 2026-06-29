@@ -1,327 +1,292 @@
 ---
 title: Getting Started
-description: Installation guide and quick start for SpaRRTa benchmark
+description: Evaluation-first setup guide for SpaRRTa, with optional Unreal scene generation
 ---
 
 # Getting Started
 
-This guide will help you set up SpaRRTa for evaluating Visual Foundation Models on spatial reasoning tasks.
+SpaRRTa currently works as a **two-repository workflow**:
 
-!!! warning "Coming Soon"
+- **This repository** contains the project website and the [`unreal-scene-gen/`](unreal-scene-generation.md) pipeline for generating synthetic scenes in Unreal Engine 5.
+- **[`turhancan97/SpaRRTa`](https://github.com/turhancan97/SpaRRTa)** contains the main evaluation code for probing Visual Foundation Models, running transfer experiments, lego evaluation, and attention analysis.
+
+For most users, the fastest path is:
+
+1. Use the **published Hugging Face datasets**
+2. Run the **evaluation repo**
+3. Use Unreal generation only if you need **custom scenes**
+
+## Choose Your Path
+
+=== "Run the benchmark now"
+
+    Use the published synthetic dataset and the main evaluation repository.
     
-    This section is currently under development. Full documentation will be available soon.
+    This is the recommended path if you want to reproduce the paper's probing workflow or start experimenting quickly.
 
-<!--
-## Prerequisites
+=== "Generate custom scenes"
 
-Before installing SpaRRTa, ensure you have the following:
-
-- **Python** 3.9 or higher
-- **PyTorch** 2.0 or higher with CUDA support
-- **Git** for cloning the repository
-- **NVIDIA GPU** with at least 11GB VRAM (for evaluation)
-
-!!! info "Optional: Unreal Engine 5"
+    Use `unreal-scene-gen/` in this repository to render RGB images, save scene metadata, and optionally derive segmentation masks.
     
-    If you want to generate new synthetic data, you'll also need:
-    
-    - **Unreal Engine 5.5** (for scene generation)
-    - **Windows** operating system (UE5 requirement)
-    - Additional 24GB+ VRAM recommended for rendering
+    This path is useful if you want custom environments, new scene samples, or additional synthetic data.
 
-## Installation
+## Orientation
 
-### Step 1: Clone the Repository
+SpaRRTa is a 4-way classification benchmark with two task variants:
+
+- **SpaRRTa-ego**: classify the target object's direction from the **camera's** viewpoint
+- **SpaRRTa-allo**: classify the target object's direction from a **human figure's** viewpoint
+
+The main evaluation code trains lightweight probe heads on top of frozen backbones such as DINO, DINOv2, DINOv3, MAE, VGGT, CroCo, SPA, and CLIP.
+
+The first training command below runs one benchmark configuration:
+
+- backbone: `dino_b16`
+- dataset: synthetic Unreal data
+- probe: `EfficientProbing`
+- perspective: `camera` (egocentric)
+- environment: `forest`
+
+Results are written by the evaluation repo under its default output directory, `result/`.
+
+## Quick Start: Evaluation Repo
+
+### 1. Clone the evaluation code
 
 ```bash
-git clone https://github.com/gmum/SpaRRTa.git
+git clone https://github.com/turhancan97/SpaRRTa.git
 cd SpaRRTa
 ```
 
-### Step 2: Create Virtual Environment
-
-=== "conda"
-
-    ```bash
-    conda create -n sparrta python=3.10
-    conda activate sparrta
-    ```
-
-=== "venv"
-
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # Linux/Mac
-    # or
-    .\venv\Scripts\activate  # Windows
-    ```
-
-### Step 3: Install Dependencies
+### 2. Create an environment and install dependencies
 
 ```bash
-# Install PyTorch (adjust for your CUDA version)
-pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+conda create -n sparrta python=3.9 --yes
+conda activate sparrta
 
-# Install SpaRRTa
+# Install PyTorch for your CUDA version (example from the upstream README)
+conda install pytorch=2.2.1 torchvision=0.17.1 pytorch-cuda=12.1 -c pytorch -c nvidia
+
 pip install -e .
 ```
 
-### Step 4: Download Pre-generated Dataset
+Optional, only if you want to use `maskfeat_vitb16`:
 
 ```bash
-# Download the benchmark dataset
-python scripts/download_dataset.py --output data/
-
-# Verify installation
-python -c "from sparrta import SpaRRTaDataset; print('Installation successful!')"
+pip install -U openmim && mim install mmcv mmcls "mmselfsup>=1.0.0rc0"
 ```
 
-## Quick Start
+### 3. Download or point to the datasets
 
-### Evaluate a Single Model
+The evaluation repo expects datasets to live outside the codebase and be referenced through environment variables.
 
-```python
-from sparrta import SpaRRTaEvaluator, load_vfm
+- Synthetic Unreal dataset: https://huggingface.co/datasets/turhancan97/SpaRRTa
+- Lego real-world split: https://huggingface.co/datasets/turhancan97/SpaRRTa-Lego
+- Attention-analysis split: https://huggingface.co/datasets/turhancan97/SpaRRTa-Attention
 
-# Load a Visual Foundation Model
-model = load_vfm("dinov2_vitb14")
-
-# Initialize evaluator
-evaluator = SpaRRTaEvaluator(
-    data_path="data/sparrta",
-    probe_type="efficient",  # or "linear", "abmilp"
-)
-
-# Run evaluation
-results = evaluator.evaluate(
-    model=model,
-    environments=["forest", "desert"],  # or "all"
-    tasks=["ego", "allo"],
-)
-
-# Print results
-print(results.summary())
-```
-
-### Run Full Benchmark
+Set the paths:
 
 ```bash
-# Evaluate all models with default settings
-python scripts/run_benchmark.py --config configs/default.yaml
-
-# Evaluate specific model
-python scripts/run_benchmark.py --model dinov2_vitb14 --probe efficient
-
-# Evaluate on specific environment
-python scripts/run_benchmark.py --model vggt --env city --task allo
+export SPARRTA_DATA_ROOT=/path/to/sparrta/unreal
+export SPARRTA_LEGO_ROOT=/path/to/sparrta/lego
+export SPARRTA_ANALYSIS_ROOT=/path/to/sparrta/attn
+export SPARRTA_CACHE_DIR=./cache
+export SPARRTA_MODELS_DIR=~/.cache/sparrta/models
 ```
 
-## Unreal Engine 5 Setup
-
-If you want to generate custom synthetic data, follow these additional steps.
-
-### System Requirements
-
-| Component | Minimum | Recommended |
-|-----------|---------|-------------|
-| OS | Windows 10/11 | Windows 11 |
-| CPU | 6-core | 8+ cores |
-| RAM | 32GB | 64GB |
-| GPU | RTX 2080 (11GB) | RTX 4090 (24GB) |
-| Storage | 100GB SSD | 500GB NVMe SSD |
-
-### Step 1: Install Unreal Engine 5.5
-
-1. Download and install [Epic Games Launcher](https://www.unrealengine.com/download)
-2. Install **Unreal Engine 5.5** from the launcher
-3. Enable **Python Editor Script Plugin**:
-   - Edit → Plugins → Search "Python"
-   - Enable "Python Editor Script Plugin"
-   - Restart the editor
-
-### Step 2: Install UnrealCV Plugin
+If you download the lego split directly from Hugging Face, the upstream repo documents this setup:
 
 ```bash
-# Clone UnrealCV
-git clone https://github.com/unrealcv/unrealcv.git
-
-# Copy to UE5 plugins folder
-cp -r unrealcv/Plugins/UnrealCV /path/to/UE5/Engine/Plugins/
+huggingface-cli download turhancan97/SpaRRTa-Lego --repo-type dataset --local-dir ./hf_SpaRRTa-Lego
+export SPARRTA_LEGO_ROOT=$(pwd)/hf_SpaRRTa-Lego/train
 ```
 
-### Step 3: Configure SpaRRTa Environments
+### 4. Run your first experiment
+
+Train an `EfficientProbing` head on DINO features for the egocentric task in the forest environment:
 
 ```bash
-# Download SpaRRTa UE5 project
-python scripts/download_ue5_project.py --output ue5_project/
-
-# Open in Unreal Engine
-# File → Open Project → Select ue5_project/SpaRRTa.uproject
+python train.py \
+  backbone=dino_b16 \
+  dataset=unreal_position \
+  probe=classifier probe._target_=sparrta.models.probes.EfficientProbing \
+  dataset.perspective=camera \
+  environment=forest
 ```
 
-### Step 4: Generate Custom Data
+To switch to the allocentric task, change the perspective:
 
-```python
-from sparrta.generation import SceneGenerator
-
-# Initialize generator
-generator = SceneGenerator(
-    ue5_project_path="ue5_project/",
-    output_path="data/custom/",
-)
-
-# Generate scenes
-generator.generate(
-    environment="forest",
-    num_images=1000,
-    task="ego",  # or "allo"
-    objects=["bear", "tree", "human"],
-)
+```bash
+python train.py \
+  backbone=dino_b16 \
+  dataset=unreal_position \
+  probe=classifier probe._target_=sparrta.models.probes.EfficientProbing \
+  dataset.perspective=human \
+  environment=forest
 ```
 
-## Configuration
+### 5. Inspect the resolved Hydra config
 
-### Default Configuration File
+If you want to confirm exactly what will run before launching training:
 
-Create `configs/my_config.yaml`:
+```bash
+python train.py --cfg job backbone=dino_b16 dataset=unreal_position
+```
+
+## Expected Evaluation Inputs
+
+The upstream evaluation repo documents the synthetic Unreal data layout like this:
+
+```text
+$SPARRTA_DATA_ROOT/
+  forest/mid-objects/
+    img_0001.jpg
+    params_0001.json
+    ...
+  desert/mid-objects/
+  winter_town/mid-objects/
+  bridge/mid-objects/
+  city/mid-objects/
+```
+
+Each `params_*.json` stores the scene geometry used by the benchmark pipeline, including camera and actor positions.
+
+## Quick Start: Unreal Scene Generation
+
+This repository contains the Unreal Engine generation pipeline under [`unreal-scene-gen/`](unreal-scene-generation.md).
+
+### Prerequisites
+
+- **Unreal Engine 5.5**
+- **Python Editor Script Plugin** enabled in Unreal
+- **Python 3.10+**
+- **PyYAML**
+
+Optional, only for mask generation:
+
+- **UnrealCV**
+- **NumPy**
+- **Pillow**
+
+Install the Python dependency:
+
+```bash
+pip install pyyaml
+```
+
+### 1. Configure the generation target
+
+Edit `unreal-scene-gen/config.yaml` and choose:
+
+- `active_environment`
+- `active_triple`
+- `num_images`
+- `screenshot_resolution`
+
+Example:
 
 ```yaml
-# Data settings
-data:
-  path: "data/sparrta"
-  environments: ["forest", "desert", "winter_town", "bridge", "city"]
-  tasks: ["ego", "allo"]
-  
-# Model settings
-model:
-  name: "dinov2_vitb14"
-  checkpoint: null  # Use default pretrained weights
-  
-# Probe settings
-probe:
-  type: "efficient"  # linear, abmilp, efficient
-  num_queries: 4  # For efficient probing
-  dropout: 0.4
-  
-# Training settings
-training:
-  batch_size: 256
-  learning_rate: 0.001
-  epochs: 500
-  warmup_steps: 100
-  weight_decay: 0.001
-  
-# Evaluation settings
-evaluation:
-  seeds: [42, 123]
-  triples_per_env: 3
+active_environment: "desert"
+active_triple: "desert_1"
+output_dir: "output"
+num_images: 500
 ```
 
-### Environment Variables
+### 2. Run scene generation inside Unreal Editor
+
+Open your Unreal project with the desired environment level loaded, then run:
+
+```text
+py "path/to/unreal-scene-gen/main.py"
+```
+
+The generator will:
+
+- sample object placements
+- adapt object height to terrain using line traces
+- sample a camera viewpoint
+- render RGB images
+- serialize camera and actor metadata to JSON
+
+Outputs are written under:
+
+```text
+unreal-scene-gen/output/<environment>/<triple_id>/
+```
+
+For example:
+
+```text
+output/desert/desert_1/
+├── img_0000.jpg
+├── params_0000.json
+├── img_0001.jpg
+├── params_0001.json
+└── ...
+```
+
+### 3. Optionally generate masks with UnrealCV
+
+Mask generation is a **separate post-process**. It is not required for base RGB scene generation.
+
+After generating scenes:
+
+1. make sure UnrealCV is installed and the game is running
+2. run the mask-generation script
 
 ```bash
-# Set data path
-export SPARRTA_DATA_PATH=/path/to/data
-
-# Set cache directory for model weights
-export SPARRTA_CACHE_DIR=/path/to/cache
-
-# Enable CUDA (default: auto-detect)
-export SPARRTA_DEVICE=cuda:0
+cd unreal-scene-gen
+python batch_generate_masks.py
 ```
 
-## Project Structure
+This reads the active environment and triple from `config.yaml`, reuses the saved `params_*.json`, and writes binary masks under:
 
+```text
+images/<environment>/<triple_id>/
 ```
-SpaRRTa/
-├── sparrta/
-│   ├── __init__.py
-│   ├── dataset.py          # Dataset classes
-│   ├── evaluator.py        # Main evaluation logic
-│   ├── models/             # VFM loaders
-│   │   ├── dino.py
-│   │   ├── clip.py
-│   │   ├── mae.py
-│   │   └── ...
-│   ├── probes/             # Probing heads
-│   │   ├── linear.py
-│   │   ├── abmilp.py
-│   │   └── efficient.py
-│   └── generation/         # UE5 data generation
-│       ├── scene_generator.py
-│       └── utils.py
-├── configs/
-│   └── default.yaml
-├── scripts/
-│   ├── download_dataset.py
-│   ├── run_benchmark.py
-│   └── download_ue5_project.py
-├── data/                   # Dataset storage
-├── docs/                   # Documentation
-├── tests/                  # Unit tests
-└── README.md
-```
+
+## Integration Note: Generation vs Evaluation
+
+The local Unreal pipeline produces the core ingredients needed by the benchmark:
+
+- RGB images
+- camera metadata
+- actor metadata
+- optional segmentation masks
+
+However, this page does **not** claim that `unreal-scene-gen` output is automatically drop-in compatible with the evaluation repo's dataset loader as-is. Custom generated data may require **layout or adaptation** to match the evaluation repo's expected on-disk structure.
+
+If your goal is to evaluate models quickly, use the published Hugging Face datasets first. Use the local generator when you need custom synthetic data and are prepared to align the output layout with the evaluation repo.
+
+## Advanced Paths
+
+- **Lego evaluation**: use the published real-world lego split and the upstream scripts for sim-to-real experiments.
+- **Attention analysis**: use `SPARRTA_ANALYSIS_ROOT` with the attention dataset and the `sparrta/analysis/` scripts from the evaluation repo.
+- **Custom backbones**: the upstream repo documents how to add a thin wrapper plus Hydra config for a new model.
+- **Transfer / few-shot**: see the upstream scripts for leave-one-environment-out and few-shot adaptation workflows.
 
 ## Troubleshooting
 
-??? question "CUDA out of memory error"
+!!! failure "Training fails before the first batch"
     
-    Try reducing batch size:
-    ```bash
-    python scripts/run_benchmark.py --batch-size 128
-    ```
+    Check that `SPARRTA_DATA_ROOT` points to a valid synthetic dataset layout. Missing or wrong dataset paths are the most common setup issue.
+
+!!! failure "A backbone errors with a missing repo or missing weights"
     
-    Or use gradient checkpointing:
-    ```python
-    evaluator = SpaRRTaEvaluator(gradient_checkpointing=True)
-    ```
+    Some backbones in the evaluation repo require external repositories or weights, such as `VGGT_REPO`, `SPA_REPO`, `CROCO_REPO`, or `DINOV3_REPO`. Start with backbones that work out of the box, such as `dino_b16`, `dinov2_*`, `dinov3_timm`, `mae_b16`, or `clip_b16_laion`.
 
-??? question "Model not found error"
+!!! failure "Unreal cannot import a Python module"
     
-    Ensure the model is available:
-    ```python
-    from sparrta.models import list_available_models
-    print(list_available_models())
-    ```
+    Unreal's Python environment can differ from your system Python. The local `unreal-scene-gen/README.md` links to Epic's guide for installing Python modules inside Unreal Engine.
+
+!!! info "Do I need UnrealCV to generate RGB images?"
     
-    Or download manually:
-    ```bash
-    python scripts/download_models.py --model dinov2_vitb14
-    ```
+    No. UnrealCV is only needed for `batch_generate_masks.py`. Base RGB generation from `main.py` does not require UnrealCV.
 
-??? question "UnrealCV connection failed"
-    
-    1. Ensure UE5 project is running
-    2. Check firewall settings
-    3. Verify UnrealCV plugin is enabled
-    4. Try restarting the UE5 editor
+## References
 
-## Next Steps
-
-<div class="feature-grid">
-  <a href="../user-guide/" class="feature-card" style="text-decoration: none;">
-    <div class="feature-icon">📖</div>
-    <div class="feature-title">User Guide</div>
-    <div class="feature-description">
-      Detailed documentation on using SpaRRTa for your research.
-    </div>
-  </a>
-  
-  <a href="../examples/" class="feature-card" style="text-decoration: none;">
-    <div class="feature-icon">💡</div>
-    <div class="feature-title">Examples</div>
-    <div class="feature-description">
-      Code examples and Jupyter notebooks for common use cases.
-    </div>
-  </a>
-  
-  <a href="../results/" class="feature-card" style="text-decoration: none;">
-    <div class="feature-icon">📊</div>
-    <div class="feature-title">Results</div>
-    <div class="feature-description">
-      Full benchmark results and leaderboards.
-    </div>
-  </a>
-</div>
-
--->
+- Evaluation repo: https://github.com/turhancan97/SpaRRTa
+- Synthetic dataset: https://huggingface.co/datasets/turhancan97/SpaRRTa
+- Lego split: https://huggingface.co/datasets/turhancan97/SpaRRTa-Lego
+- Attention split: https://huggingface.co/datasets/turhancan97/SpaRRTa-Attention
+- Local Unreal pipeline: [`unreal-scene-gen/README.md`](https://github.com/gmum/SpaRRTa/tree/main/unreal-scene-gen)
