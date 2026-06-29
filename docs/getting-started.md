@@ -285,7 +285,7 @@ If your goal is to evaluate models quickly, use the published Hugging Face datas
 
 ## References
 
-- Evaluation repo: https://github.com/turhancan97/SpaRRTa
+- Evaluation repo: [turhancan97/SpaRRTa](https://github.com/turhancan97/SpaRRTa)
 - Synthetic dataset: https://huggingface.co/datasets/turhancan97/SpaRRTa
 - Lego split: https://huggingface.co/datasets/turhancan97/SpaRRTa-Lego
 - Attention split: https://huggingface.co/datasets/turhancan97/SpaRRTa-Attention

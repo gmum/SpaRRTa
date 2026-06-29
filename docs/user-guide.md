@@ -321,4 +321,4 @@ So the practical recommendation is:
 - [Evaluation of VFMs](evaluation-vfms.md)
 - [Unreal Scene Generation](unreal-scene-generation.md)
 - [Spatial evaluation overview](https://github.com/gmum/SpaRRTa/tree/main/spatial-evaluation)
-- Upstream evaluation repo: https://github.com/turhancan97/SpaRRTa
+- Upstream evaluation repo: [turhancan97/SpaRRTa](https://github.com/turhancan97/SpaRRTa)
