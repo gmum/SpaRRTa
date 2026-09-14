@@ -321,7 +321,7 @@
   justify-content: center;
   align-items: center;
   gap: 3rem;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   margin: 2rem auto;
   padding: 2rem 3rem;
   background: #f1f1f1;
@@ -358,10 +358,22 @@
   max-width: 250px;
 }
 
+.affiliation-logo[src*="JCAI"],
+.affiliation-logo[alt*="JCAI"] {
+  height: 100px;
+  max-width: 250px;
+}
+
 .affiliation-logo[src*="ideas.png"],
 .affiliation-logo[alt="IDEAS NCBR"] {
   height: 100px;
   max-width: 250px;
+}
+
+.affiliation-logo[src*="nask"],
+.affiliation-logo[alt*="NASK"] {
+  height: 90px;
+  max-width: 150px;
 }
 
 .affiliation-logo[src*="agh.png"],
@@ -394,12 +406,24 @@
     max-width: 220px;
   }
   
+  .affiliation-logo[src*="JCAI"],
+  .affiliation-logo[alt*="JCAI"] {
+    height: 80px;
+    max-width: 220px;
+  }
+
   .affiliation-logo[src*="ideas.png"],
   .affiliation-logo[alt="IDEAS NCBR"] {
     height: 80px;
     max-width: 220px;
   }
   
+  .affiliation-logo[src*="nask"],
+  .affiliation-logo[alt*="NASK"] {
+    height: 70px;
+    max-width: 120px;
+  }
+
   .affiliation-logo[src*="agh.png"],
   .affiliation-logo[alt="AGH University of Krakow"] {
     height: 80px;

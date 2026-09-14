@@ -189,12 +189,12 @@ To address this question, we introduce the **Spatial Relation Recognition Task (
   
   <div class="author-card">
     <div class="author-name">Bartosz Zieliński</div>
-    <div class="author-affiliation">Jagiellonian University</div>
+    <div class="author-affiliation">Jagiellonian University, JCAI</div>
   </div>
   
   <div class="author-card">
     <div class="author-name">Marcin Przewięźlikowski</div>
-    <div class="author-affiliation">Jagiellonian University</div>
+    <div class="author-affiliation">Jagiellonian University, NASK</div>
   </div>
 </div>
 
@@ -203,7 +203,9 @@ To address this question, we introduce the **Spatial Relation Recognition Task (
 <div class="affiliations">
   <img src="imgs/orgs/uj.png" alt="Jagiellonian University" class="affiliation-logo" title="Jagiellonian University">
   <img src="imgs/orgs/gmum.png" alt="GMUM" class="affiliation-logo" title="GMUM - Group of Machine Learning Research">
+  <img src="imgs/orgs/JCAI_logo.png" alt="JCAI" class="affiliation-logo" title="Jagiellonian Center for Artificial Intelligence (JCAI)">
   <img src="imgs/orgs/ideas.png" alt="IDEAS NCBR" class="affiliation-logo" title="IDEAS NCBR">
+  <img src="imgs/orgs/nask_logo.png" alt="NASK" class="affiliation-logo" title="NASK - National Research Institute">
   <img src="imgs/orgs/agh.png" alt="AGH University of Krakow" class="affiliation-logo" title="AGH University of Krakow">
 </div>
 
