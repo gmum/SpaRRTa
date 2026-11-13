@@ -40,6 +40,9 @@ hide:
       <a href="https://github.com/gmum/SpaRRTa" class="hero-btn hero-btn-secondary" target="_blank">
         <span class="twemoji">📦</span> GitHub
       </a>
+      <a href="https://arxiv.org/abs/2601.11729" class="hero-btn hero-btn-secondary" target="_blank">
+        <span class="twemoji">📑</span> arXiv
+      </a>
       <a href="https://link.springer.com/article/10.1007/s11263-026-03112-7" class="hero-btn hero-btn-secondary" target="_blank">
         <span class="twemoji">📄</span> Paper
       </a>
