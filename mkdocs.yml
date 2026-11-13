@@ -1,5 +1,5 @@
 site_name: SpaRRTa
-site_description: A Synthetic Benchmark for Evaluating Spatial Intelligence in Visual Foundation Models
+site_description: "[IJCV 2026] A Synthetic Benchmark for Evaluating Spatial Intelligence in Visual Foundation Models"
 site_author: Turhan Can Kargin et al.
 site_url: https://gmum.github.io/SpaRRTa/
 repo_name: gmum/SpaRRTa
