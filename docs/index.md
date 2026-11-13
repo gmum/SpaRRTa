@@ -24,6 +24,9 @@ hide:
       <a href="https://github.com/gmum/SpaRRTa/blob/main/LICENSE">
         <img src="https://img.shields.io/github/license/gmum/SpaRRTa?style=for-the-badge&labelColor=1a1a2e&color=536dfe" alt="License">
       </a>
+      <a href="https://link.springer.com/article/10.1007/s11263-026-03112-7" target="_blank">
+        <img src="https://img.shields.io/badge/IJCV-2026-00599c?style=for-the-badge&logo=springer&logoColor=white&labelColor=1a1a2e" alt="IJCV">
+      </a>
       <a href="https://arxiv.org/abs/2601.11729">
         <img src="https://img.shields.io/badge/arXiv-2601.11729-b31b1b?style=for-the-badge&logo=arxiv&logoColor=white&labelColor=1a1a2e" alt="arXiv">
       </a>
@@ -37,7 +40,7 @@ hide:
       <a href="https://github.com/gmum/SpaRRTa" class="hero-btn hero-btn-secondary" target="_blank">
         <span class="twemoji">📦</span> GitHub
       </a>
-      <a href="https://arxiv.org/abs/2601.11729" class="hero-btn hero-btn-secondary" target="_blank">
+      <a href="https://link.springer.com/article/10.1007/s11263-026-03112-7" class="hero-btn hero-btn-secondary" target="_blank">
         <span class="twemoji">📄</span> Paper
       </a>
       <a href="https://huggingface.co/datasets/turhancan97/SpaRRTa" class="hero-btn hero-btn-secondary" target="_blank">
@@ -215,14 +218,13 @@ If you find SpaRRTa useful in your research, please cite our paper:
 
 <div class="citation-box">
   <button class="citation-copy-btn">📋 Copy BibTeX</button>
-  <pre><code class="language-bibtex">@misc{kargin2026sparrta,
+  <pre><code class="language-bibtex">@article{kargin2026sparrta,
   title={SpaRRTa: A Synthetic Benchmark for Evaluating Spatial Intelligence in Visual Foundation Models},
   author={Turhan Can Kargin and Wojciech Jasiński and Adam Pardyl and Bartosz Zieliński and Marcin Przewięźlikowski},
+  journal={International Journal of Computer Vision},
   year={2026},
-  eprint={2601.11729},
-  archivePrefix={arXiv},
-  primaryClass={cs.CV},
-  url={https://arxiv.org/abs/2601.11729}
+  doi={10.1007/s11263-026-03112-7},
+  url={https://link.springer.com/article/10.1007/s11263-026-03112-7}
 }</code></pre>
 </div>
 

@@ -9,13 +9,14 @@
 [![hydra](https://img.shields.io/badge/Config-Hydra_1.3-89b8cd)](https://hydra.cc/)
 [![license](https://img.shields.io/badge/License-MIT-green.svg?labelColor=gray)](https://github.com/gmum/SpaRRTa/blob/main/LICENSE)
 
-[**Project Page**](https://sparrta.gmum.net/) | [**Paper**](https://arxiv.org/pdf/2601.11729) | [**arXiv**](https://arxiv.org/abs/2601.11729) | [**HuggingFace Model**](https://huggingface.co/turhancan97/SpaRRTa-probes) | [**HuggingFace Space**](https://huggingface.co/spaces/turhancan97/SpaRRTa-demo) | [**Dataset**](https://huggingface.co/datasets/turhancan97/SpaRRTa) | [**Twitter/X**](https://x.com/turhancan97/status/2019373429804396989) | [**YouTube Video**]()
+[**Project Page**](https://sparrta.gmum.net/) | [**Paper (IJCV)**](https://link.springer.com/article/10.1007/s11263-026-03112-7) | [**arXiv**](https://arxiv.org/abs/2601.11729) | [**HuggingFace Model**](https://huggingface.co/turhancan97/SpaRRTa-probes) | [**HuggingFace Space**](https://huggingface.co/spaces/turhancan97/SpaRRTa-demo) | [**Dataset**](https://huggingface.co/datasets/turhancan97/SpaRRTa) | [**Twitter/X**](https://x.com/turhancan97/status/2019373429804396989) | [**YouTube Video**]()
 
 [Turhan Can Kargin](https://turhancankargin.me/), [Wojciech Jasiński](https://www.linkedin.com/in/wojciechjasinski/), [Adam Pardyl](https://adam.pardyl.com/),  [Bartosz Zieliński](https://bartoszzielinski.github.io/), [Marcin Przewięźlikowski](https://mprzewie.github.io/)
 </div>
 
 :newspaper: **NEWS**:
 
+- *Nov. 2026:* Paper published in the [International Journal of Computer Vision (IJCV)](https://link.springer.com/article/10.1007/s11263-026-03112-7)!
 - *Jun. 2026:* Evaluation code is available on [GitHub](https://github.com/gmum/SpaRRTa/tree/main/spatial-evaluation).
 - *Apr. 2026:* Paper accepted to the [2nd Workshop on World Models (ICLR 2026)](https://sites.google.com/view/iclr-2026-workshop-world-model/accepted-papers)!
 - *Mar. 2026:* Model and demo space are available on [HuggingFace Model](https://huggingface.co/turhancan97/SpaRRTa-probes) and [HuggingFace Space](https://huggingface.co/spaces/turhancan97/SpaRRTa-demo).
@@ -29,12 +30,11 @@
 If you find this research useful, please consider citing:
 
 ```bibtex
-@misc{kargin2026sparrta,
+@article{kargin2026sparrta,
   title={SpaRRTa: A Synthetic Benchmark for Evaluating Spatial Intelligence in Visual Foundation Models},
   author={Turhan Can Kargin and Wojciech Jasiński and Adam Pardyl and Bartosz Zieliński and Marcin Przewięźlikowski},
+  journal={International Journal of Computer Vision},
   year={2026},
-  eprint={2601.11729},
-  archivePrefix={arXiv},
-  primaryClass={cs.CV},
-  url={https://arxiv.org/abs/2601.11729}
+  doi={10.1007/s11263-026-03112-7},
+  url={https://link.springer.com/article/10.1007/s11263-026-03112-7}
 }

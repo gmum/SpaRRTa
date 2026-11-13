@@ -29,7 +29,7 @@ transfer, sim-to-real (lego) evaluation, and an attention-analysis pipeline.
 
 ## Resources
 
-- 📄 **Paper:** [arXiv:2601.11729](https://arxiv.org/abs/2601.11729)
+- 📄 **Paper (IJCV):** [10.1007/s11263-026-03112-7](https://link.springer.com/article/10.1007/s11263-026-03112-7) ([arXiv:2601.11729](https://arxiv.org/abs/2601.11729))
 - 💻 **Evaluation code:** https://github.com/turhancan97/SpaRRTa
 - 🚀 **Live demo:** https://huggingface.co/spaces/turhancan97/SpaRRTa-demo
 - 🧩 **Dataset (synthetic):** https://huggingface.co/datasets/turhancan97/SpaRRTa
@@ -66,7 +66,9 @@ data layout, transfer protocols, the attention-analysis suite, and how to add yo
 @article{kargin2026sparrta,
   title   = {SpaRRTa: A Synthetic Benchmark for Evaluating Spatial Intelligence in Visual Foundation Models},
   author  = {Karg{\i}n, Turhan Can and Jasi{\'n}ski, Wojciech and Pardyl, Adam and Zieli{\'n}ski, Bartosz and Przewi{\k{e}}{\'z}likowski, Marcin},
-  journal = {arXiv preprint arXiv:2601.11729},
-  year    = {2026}
+  journal = {International Journal of Computer Vision},
+  year    = {2026},
+  doi     = {10.1007/s11263-026-03112-7},
+  url     = {https://link.springer.com/article/10.1007/s11263-026-03112-7}
 }
 ```
