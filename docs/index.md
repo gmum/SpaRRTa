@@ -58,6 +58,15 @@ hide:
   </div>
 </div>
 
+## Watch the 90-second explanation
+
+<video class="sparrta-explainer" controls playsinline preload="none" width="1920" height="1080" poster="media/sparrta-explainer-poster.jpg" aria-label="Whose right? A narrated explanation of SpaRRTa with English subtitles">
+  <source src="media/sparrta-explainer.mp4" type="video/mp4">
+  <a href="media/sparrta-explainer.mp4">Download the SpaRRTa explainer</a>
+</video>
+
+[Download English subtitles (.vtt)](media/sparrta-explainer.en.vtt)
+
 ## Abstract
 
 **Visual Foundation Models (VFMs)**, such as DINO and CLIP, exhibit strong semantic understanding but show limited spatial reasoning capabilities, which limits their applicability to embodied systems. Recent work incorporates 3D tasks (such as depth estimation) into VFM training. However, VFM performance remains inconsistent across different tasks, raising the question: **do these models truly have spatial awareness or overfit to specific 3D objectives?**

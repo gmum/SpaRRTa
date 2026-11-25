@@ -162,6 +162,15 @@
 }
 
 /* ==================== TEASER IMAGE ==================== */
+.sparrta-explainer {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  background: #111722;
+  border-radius: 0.75rem;
+}
+
 .teaser-container {
   position: relative;
   max-width: 900px;

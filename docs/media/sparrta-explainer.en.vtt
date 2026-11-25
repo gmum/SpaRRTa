@@ -1,0 +1,74 @@
+WEBVTT
+
+00:00:00.420 --> 00:00:02.911
+Where is the tree, relative to the truck?
+
+00:00:03.208 --> 00:00:05.738
+It sounds like a question with one answer.
+
+00:00:06.036 --> 00:00:09.295
+Look through the blue camera. Which side would you choose?
+
+00:00:10.463 --> 00:00:11.953
+The tree is on the right.
+
+00:00:12.731 --> 00:00:16.443
+Now imagine standing across the road, facing the truck.
+
+00:00:16.740 --> 00:00:19.775
+Keep the tree and the truck exactly where they are.
+
+00:00:20.072 --> 00:00:23.028
+Follow what happens to the direction you call right.
+
+00:00:23.594 --> 00:00:25.777
+From here, the tree is on your left.
+
+00:00:26.555 --> 00:00:29.471
+One arrangement gives us two correct answers.
+
+00:00:29.769 --> 00:00:32.472
+The camera gives us an egocentric view.
+
+00:00:32.769 --> 00:00:36.987
+Taking the person's perspective gives us an allocentric view.
+
+00:00:37.766 --> 00:00:39.944
+This is the idea behind SpaRRTa.
+
+00:00:40.241 --> 00:00:44.948
+In Unreal Engine, we place objects in a scene and render an image.
+
+00:00:45.245 --> 00:00:48.827
+The simulator records where the objects and viewpoints are.
+
+00:00:49.124 --> 00:00:53.550
+That geometry gives us a label: front, back, left, or right.
+
+00:00:54.328 --> 00:00:57.560
+What can a vision model recover from the image alone?
+
+00:00:57.857 --> 00:01:01.005
+We freeze the model and take its image features.
+
+00:01:01.303 --> 00:01:06.096
+Then we train a small classifier, called a probe, to predict the direction.
+
+00:01:06.875 --> 00:01:09.237
+Even the way we read the features matters.
+
+00:01:09.534 --> 00:01:14.821
+Take one model, VGGT, on the forest scenes from the camera's view.
+
+00:01:15.118 --> 00:01:18.436
+A linear probe gets about fifty-two percent correct.
+
+00:01:18.734 --> 00:01:23.733
+A probe that attends to image patches reaches about ninety-six percent.
+
+00:01:24.511 --> 00:01:25.897
+Try a scene yourself.
+
+00:01:26.194 --> 00:01:28.938
+Before you pick a direction, ask: whose right?
+
