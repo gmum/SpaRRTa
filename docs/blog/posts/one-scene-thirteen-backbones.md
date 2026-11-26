@@ -45,11 +45,29 @@ Three readings from that figure are worth comparing:
 - **MAE.** At block 11, the cab-to-bed similarity is **0.71**, while the cab-to-tree similarity is **0.36**. Much of the road also has positive similarity to the cab. The fixed scale lets us see that higher background level.
 - **VGGT.** The truck is visible at block 12. By block 24, even the *least* similar patch scores **0.973** against the cab. The same layer's PCA map still outlines the truck. Cosine measures the angle to one vector, whereas PCA stretches directions of variation across the collection of patches. Small differences between nearly parallel vectors can therefore be visible in the PCA image.
 
-The VGGT result is particularly instructive. A reader given only the last red panel might guess that its features contain little usable spatial information. The probe result gives a direct way to check that guess.
+## What changes at twice the input resolution?
+
+We ran the same Bridge and City images through these three encoders again at 448 × 448. Doubling the input width and height gives each model four times as many spatial tokens. Look at the tree to the left of the truck in the Bridge panels. At 448, you can follow its trunk below the crown and trace the lane markings alongside the pickup.
+
+![Paired 224 and 448 feature maps for DINOv2-L with registers, MAE-B, and VGGT-L on Bridge and City. The finer Bridge grids reveal the tree trunk and the diagonal lane markings.](../../imgs/featlens/resolution-comparison.png)
+
+*Each row uses one FeatLens PCA color projection fitted to equal numbers of patches from both scenes and resolutions. Within a row, the colors are comparable across all four panels. DINOv2 and VGGT go from 16 × 16 to 32 × 32 cells, and MAE goes from 14 × 14 to 28 × 28.*
+
+Does the finer grid change which patches resemble the truck cab? We kept the cab, bed, and tree sample coordinates fixed. At 448, each sampled patch covers a smaller part of the original image.
+
+| Backbone | Bridge patch compared with the cab | Cosine at 224 | Cosine at 448 |
+|---|---|---:|---:|
+| DINOv2-L with registers | Truck bed | 0.589 | 0.433 |
+| DINOv2-L with registers | Tree | 0.162 | 0.231 |
+| MAE-B | Truck bed | 0.710 | 0.573 |
+| MAE-B | Tree | 0.364 | 0.371 |
+| VGGT-L | Least similar patch in the image | 0.973 | 0.972 |
+
+For DINOv2 and MAE, the bed remains more similar to the cab than the tree does, though the gap narrows. VGGT gives the clearest example of why the choice of visualization matters. Its 448 PCA map shows a finer truck outline, yet the least similar patch still scores 0.972 against the cab, rounded to three decimals. These two scenes tell us how the features respond to resolution. Measuring direction-prediction accuracy at 448 would require a separate probe evaluation.
 
 ## What can a probe recover?
 
-The four numeric columns below are **published test accuracies (%)** for SpaRRTa's efficient probe. Each number summarizes an environment and viewpoint across many test images. The short observations refer only to the two images shown above. We generated the feature maps for this post and took the accuracies from the benchmark. [SpaRRTa, Tables 3 and 4](https://arxiv.org/html/2601.11729v3)
+The four numeric columns below are **published test accuracies (%)** for SpaRRTa's efficient probe at the benchmark's 224 × 224 input resolution. Each number summarizes an environment and viewpoint across many test images. The short observations refer only to the two images shown above. We generated the feature maps for this post and took the accuracies from the benchmark. [SpaRRTa, Tables 3 and 4](https://arxiv.org/html/2601.11729v3)
 
 | Backbone | Training signal | What to look for in these maps | Bridge camera | Bridge person | City camera | City person |
 |---|---|---|---:|---:|---:|---:|
@@ -73,11 +91,11 @@ DINOv2-L with registers and VGGT tie on the Bridge camera task despite the diffe
 
 ## How we made the figures
 
-We used the Bridge and City images from the project demo and the 13 checkpoints represented in the paper's main tables. Each frozen encoder received one bicubically resized 224 × 224 RGB image at a time with SpaRRTa's ImageNet normalization. We kept the spatial tokens on their native grid and enlarged the colored cells with nearest-neighbor sampling. For each backbone we fitted FeatLens's robust three-component PCA jointly to the two grids with a fixed PyTorch seed of 24. The cosine computation used the original patch vectors. The bed and tree samples were at normalized image coordinates (0.61, 0.37) and (0.21, 0.39), respectively.
+We used the Bridge and City images from the project demo and the 13 checkpoints represented in the paper's main tables. For the 13-backbone gallery, each frozen encoder received one bicubically resized 224 × 224 RGB image at a time with SpaRRTa's ImageNet normalization. We kept the spatial tokens on their native grid and enlarged the colored cells with nearest-neighbor sampling. For each backbone we fitted FeatLens's robust three-component PCA jointly to the two grids with a fixed PyTorch seed of 24. The cosine computation used the original patch vectors. The bed and tree samples were at normalized image coordinates (0.61, 0.37) and (0.21, 0.39), respectively.
 
 We selected the deepest feature exposed by the evaluation configuration. For MAE, the wrapper indexes a hidden-state sequence that includes the embedding output, so its deepest configured index is the output of **block 11 of 12**. For VGGT, SpaRRTa probes the single-image patch encoder before the multi-view aggregator. For CLIP, we used the LAION ViT-B/16 checkpoint and checked the patch outputs against OpenCLIP's native forward pass. These choices matter when comparing the figures to visualizations from another implementation. [SpaRRTa extraction code](https://github.com/turhancan97/SpaRRTa/tree/bb58d7c0faf26f85ce456b187321d30fe197e6df/sparrta/models) · [FeatLens revision used](https://github.com/turhancan97/FeatLens/tree/fb0c339a92eb7014d8ea7887e352b76b2d424097)
 
-The figure data include the 26 native-resolution PCA maps, all 12 cosine arrays, and a manifest with the input image hashes, model configurations, and layer indices. [Download the figure data](../../imgs/featlens/figure-data.zip)
+The figure data include the original 26 PCA maps, 12 layer-wise cosine arrays, and a manifest with the input image hashes, model configurations, and layer indices. The `resolution/` folder contains the 12 paired PCA maps, six Bridge cosine arrays, and the measurements for the resolution comparison. [Download the figure data](../../imgs/featlens/figure-data.zip)
 
 **Software citation.** Kargın, Turhan Can (2026). *FeatLens: Model-agnostic feature-map visualization for vision models*. Version 0.3.2. Zenodo. [DOI 10.5281/zenodo.21082488](https://doi.org/10.5281/zenodo.21082488)
 
